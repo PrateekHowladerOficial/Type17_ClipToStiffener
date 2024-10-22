@@ -243,6 +243,16 @@ namespace Type17_ClipToStiffener
                 Beam beam1 = myModel.SelectModelObject(beam1Input.GetInput() as Identifier) as Beam;                
                 Beam beam2 = myModel.SelectModelObject(Input[1].GetInput() as Identifier) as Beam;
 
+                Point origin1 = beam1.EndPoint;
+                var girtCoord = beam1.GetCoordinateSystem();
+                girtCoord.Origin = origin1;
+                //girtCoord.AxisX = girtCoord.AxisX *- 1;
+
+                TransformationPlane currentTransformation = myModel.GetWorkPlaneHandler().GetCurrentTransformationPlane();
+                var newWorkPlane = new TransformationPlane(girtCoord);
+                // workPlaneHandler.SetCurrentTransformationPlane(newWorkPlane);
+                myModel.GetWorkPlaneHandler().SetCurrentTransformationPlane(newWorkPlane);
+
                 ContourPlate cp = ContourFitPart(beam1, beam2, _Gap, _Material);
                 bool flag = true;
                 if(_Platepoaition == 0)
@@ -250,8 +260,11 @@ namespace Type17_ClipToStiffener
                 else
                     flag = false;
                 ArrayList poliplates = polibeamPlate(beam1,beam2,cp,_Gap,_PlateWidth1,_PlateWidth2,_PlateHight,_Thickness,_TopOffset,_Material,flag);
-                myModel.CommitChanges();
+                
                 BoltArray(cp,beam2, poliplates[0] as Part, poliplates[1] as Part);
+
+                myModel.GetWorkPlaneHandler().SetCurrentTransformationPlane(currentTransformation);
+            
             }
             catch (Exception Exc)
             {
@@ -703,10 +716,10 @@ namespace Type17_ClipToStiffener
                 PolyBeam pb = new PolyBeam();
                 pb.Contour.ContourPoints = countourPoints;
                 pb.Profile.ProfileString = "PLT"+thickness+"*"+hight;
-                pb.Position.Depth = Position.DepthEnum.MIDDLE;
-                pb.Position.DepthOffset = topOffset;
-                pb.Position.Plane =(depthFlag)? Position.PlaneEnum.RIGHT: Position.PlaneEnum.LEFT;
-                pb.Position.Rotation = Position.RotationEnum.TOP;
+                pb.Position.Depth = Position.DepthEnum.FRONT;
+                pb.Position.PlaneOffset = topOffset;
+                pb.Position.Plane = Position.PlaneEnum.MIDDLE;
+                pb.Position.Rotation = Position.RotationEnum.FRONT;
                 pb.Material.MaterialString = material;
                 pb.Class = "1";
                 pb.Insert();
@@ -720,10 +733,10 @@ namespace Type17_ClipToStiffener
                 PolyBeam pb1 = new PolyBeam();
                 pb1.Contour.ContourPoints = countourPoints;
                 pb1.Profile.ProfileString = "PLT" + thickness + "*" + hight;
-                pb1.Position.Depth = Position.DepthEnum.MIDDLE;
-                pb1.Position.DepthOffset = topOffset;
-                pb1.Position.Plane = (!depthFlag) ? Position.PlaneEnum.RIGHT : Position.PlaneEnum.LEFT;
-                pb1.Position.Rotation = Position.RotationEnum.TOP;
+                pb1.Position.Depth = Position.DepthEnum.BEHIND;
+                pb1.Position.PlaneOffset = topOffset;
+                pb1.Position.Plane =  Position.PlaneEnum.MIDDLE ;
+                pb1.Position.Rotation = Position.RotationEnum.FRONT;
                 pb1.Material.MaterialString = material;
                 pb1.Class = "1";
                 pb1.Insert();
@@ -763,10 +776,10 @@ namespace Type17_ClipToStiffener
                 PolyBeam pb = new PolyBeam();
                 pb.Contour.ContourPoints = countourPoints;
                 pb.Profile.ProfileString = "PLT" + hight + "*" + thickness;
-                pb.Position.Depth = Position.DepthEnum.MIDDLE;
-                pb.Position.DepthOffset = topOffset;
-                pb.Position.Plane = (!depthFlag) ? Position.PlaneEnum.RIGHT : Position.PlaneEnum.LEFT;
-                pb.Position.Rotation = Position.RotationEnum.TOP;
+                pb.Position.Depth = Position.DepthEnum.FRONT;
+                pb.Position.PlaneOffset = topOffset;
+                pb.Position.Plane = Position.PlaneEnum.MIDDLE;
+                pb.Position.Rotation = Position.RotationEnum.FRONT;
                 pb.Material.MaterialString = material;
                 pb.Class = "1";
                 pb.Insert();
@@ -780,10 +793,10 @@ namespace Type17_ClipToStiffener
                 pb1.Contour.ContourPoints = countourPoints;
                 
                 pb1.Profile.ProfileString = "PLT" + hight + "*" + thickness;
-                pb1.Position.Depth = Position.DepthEnum.MIDDLE;
-                pb1.Position.DepthOffset = topOffset;
-                pb1.Position.Plane = (depthFlag) ? Position.PlaneEnum.RIGHT : Position.PlaneEnum.LEFT;
-                pb1.Position.Rotation = Position.RotationEnum.TOP;
+                pb1.Position.Depth = Position.DepthEnum.BEHIND;
+                pb1.Position.PlaneOffset = topOffset;
+                pb1.Position.Plane = Position.PlaneEnum.MIDDLE;
+                pb1.Position.Rotation = Position.RotationEnum.FRONT;
                 pb1.Material.MaterialString = material;
                 pb1.Class = "1";
                 pb1.Insert();
@@ -835,7 +848,7 @@ namespace Type17_ClipToStiffener
 
                 bA.Position.Depth = Position.DepthEnum.MIDDLE;
                 bA.Position.Plane = Position.PlaneEnum.MIDDLE;
-                bA.Position.Rotation = Position.RotationEnum.FRONT;
+                bA.Position.Rotation = Position.RotationEnum.TOP;
 
                 bA.Bolt = (_FlagBolt == 0) ? true : false;
                 bA.Washer1 = (_FlagWasher1 == 0) ? true : false;
@@ -877,6 +890,7 @@ namespace Type17_ClipToStiffener
                     }
                 }
                 bA.StartPointOffset.Dx = _BA1OffsetX;
+                bA.EndPointOffset.Dx = _BA1OffsetX;
                 if (doubles != null)
                     doubles.Clear();
                 doubles = InputConverter(_BA1yText);
@@ -908,7 +922,8 @@ namespace Type17_ClipToStiffener
                 }
 
 
-                bA.StartPointOffset.Dy = _BA1OffsetY;
+                bA.StartPointOffset.Dz = _BA1OffsetY;
+                bA.EndPointOffset.Dz = _BA1OffsetY;
                 Point point1 = FindClosestPointOnPlane(geometricPlane, refference),
                     point2 = FindPointOnLine(FindClosestPointOnPlane(geometricPlane, cpMid), point1, total / 2 * -1);
 
@@ -926,8 +941,8 @@ namespace Type17_ClipToStiffener
                     face_ = cp1_faces[5];
                 BoltArray bA1 = new BoltArray();
                 bA1.PartToBeBolted = cp1;
-
-                bA1.PartToBoltTo = part2;
+                bA1.PartToBoltTo = cp2;
+                bA1.AddOtherPartToBolt(part2); 
                 //bA1.AddOtherPartToBolt(part2);
 
                 bA1.BoltSize = _BoltSizeEnum[_BoltSize];
@@ -985,6 +1000,7 @@ namespace Type17_ClipToStiffener
                     }
                 }
                 bA1.StartPointOffset.Dx = _BA2OffsetX;
+                bA1.EndPointOffset.Dx = _BA2OffsetX;
                 if (doubles != null)
                     doubles.Clear();
                 doubles = InputConverter(_BA2yText);
@@ -1017,6 +1033,7 @@ namespace Type17_ClipToStiffener
 
 
                 bA1.StartPointOffset.Dy = _BA2OffsetY;
+                bA1.EndPointOffset.Dy = _BA2OffsetY;
 
                 ArrayList list = Get_Points(face_.Face);
                 Point point_refference = new Point();
@@ -1037,10 +1054,7 @@ namespace Type17_ClipToStiffener
                 Point lPoint2 = part2Plane.TransformationMatrixToLocal.Transform(currentPlane.TransformationMatrixToGlobal.Transform(point_refference));
                 bA1.FirstPosition = lPoint1;
                 bA1.SecondPosition = lPoint2;
-                ControlPoint controlPoint = new ControlPoint(bA1.FirstPosition);
-                controlPoint.Insert();
-                ControlPoint controlPoint1 = new ControlPoint(bA1.SecondPosition);
-                controlPoint1.Insert();
+                
 
 
                 flag = bA1.Insert();
@@ -1206,23 +1220,9 @@ namespace Type17_ClipToStiffener
         }
         private static Point FindClosestPointOnPlane(GeometricPlane plane, Point point)
         {
-            // Step 1: Get the normal vector of the plane
-            Vector normalVector = plane.Normal;
+            
 
-            // Step 2: Find a vector from the plane's origin to the given point
-            Vector pointToPlaneVector = new Vector(point.X - plane.Origin.X, point.Y - plane.Origin.Y, point.Z - plane.Origin.Z);
-
-            // Step 3: Project the pointToPlaneVector onto the plane's normal vector
-            double distanceFromPointToPlane = pointToPlaneVector.Dot(normalVector); // Dot product to find projection length along the normal
-
-            // Step 4: Calculate the closest point by moving from the point in the opposite direction of the normal by the distance
-            Point closestPoint = new Point(
-                point.X - distanceFromPointToPlane * normalVector.X,
-                point.Y - distanceFromPointToPlane * normalVector.Y,
-                point.Z - distanceFromPointToPlane * normalVector.Z
-            );
-
-            return closestPoint;
+            return Projection.PointToPlane(point,plane);
         }
         public static bool IsPointOnPlane(Point point, GeometricPlane plane)
         {

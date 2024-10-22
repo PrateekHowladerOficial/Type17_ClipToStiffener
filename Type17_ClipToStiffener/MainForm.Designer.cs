@@ -33,7 +33,6 @@ namespace Type17_ClipToStiffener
             this.OkApplyModifyGetOnOffCancel = new Tekla.Structures.Dialog.UIControls.OkApplyModifyGetOnOffCancel();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.ParametersTabPage = new System.Windows.Forms.TabPage();
-            this.materialCatalog1 = new Tekla.Structures.Dialog.UIControls.MaterialCatalog();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.textBox8 = new System.Windows.Forms.TextBox();
@@ -104,6 +103,7 @@ namespace Type17_ClipToStiffener
             this.label11 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.saveLoad = new Tekla.Structures.Dialog.UIControls.SaveLoad();
+            this.materialCatalog1 = new Tekla.Structures.Dialog.UIControls.MaterialCatalog();
             this.tableLayoutPanel.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.ParametersTabPage.SuspendLayout();
@@ -208,22 +208,6 @@ namespace Type17_ClipToStiffener
             this.ParametersTabPage.Text = "Clip to Stiffner";
             this.ParametersTabPage.Click += new System.EventHandler(this.ParametersTabPage_Click);
             // 
-            // materialCatalog1
-            // 
-            this.structuresExtender.SetAttributeName(this.materialCatalog1, null);
-            this.structuresExtender.SetAttributeTypeName(this.materialCatalog1, null);
-            this.materialCatalog1.BackColor = System.Drawing.Color.Transparent;
-            this.structuresExtender.SetBindPropertyName(this.materialCatalog1, null);
-            this.materialCatalog1.ButtonText = ".....";
-            this.materialCatalog1.Location = new System.Drawing.Point(448, 59);
-            this.materialCatalog1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.materialCatalog1.Name = "materialCatalog1";
-            this.materialCatalog1.SelectedMaterial = "";
-            this.materialCatalog1.Size = new System.Drawing.Size(52, 24);
-            this.materialCatalog1.TabIndex = 20;
-            this.materialCatalog1.SelectionDone += new System.EventHandler(this.materialCatalog1_select);
-            this.materialCatalog1.Load += new System.EventHandler(this.materialCatalog1_Load);
-            // 
             // textBox9
             // 
             this.structuresExtender.SetAttributeName(this.textBox9, "Finish");
@@ -300,6 +284,7 @@ namespace Type17_ClipToStiffener
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(100, 22);
             this.textBox6.TabIndex = 13;
+            this.textBox6.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
             // 
             // label7
             // 
@@ -322,6 +307,7 @@ namespace Type17_ClipToStiffener
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(100, 22);
             this.textBox5.TabIndex = 11;
+            this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
             // 
             // label6
             // 
@@ -1088,6 +1074,21 @@ namespace Type17_ClipToStiffener
             this.saveLoad.TabIndex = 0;
             this.saveLoad.UserDefinedHelpFilePath = null;
             // 
+            // materialCatalog1
+            // 
+            this.structuresExtender.SetAttributeName(this.materialCatalog1, null);
+            this.structuresExtender.SetAttributeTypeName(this.materialCatalog1, null);
+            this.materialCatalog1.BackColor = System.Drawing.Color.Transparent;
+            this.structuresExtender.SetBindPropertyName(this.materialCatalog1, null);
+            this.materialCatalog1.ButtonText = "albl_Select__";
+            this.materialCatalog1.Location = new System.Drawing.Point(448, 54);
+            this.materialCatalog1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.materialCatalog1.Name = "materialCatalog1";
+            this.materialCatalog1.SelectedMaterial = "";
+            this.materialCatalog1.Size = new System.Drawing.Size(74, 27);
+            this.materialCatalog1.TabIndex = 20;
+            this.materialCatalog1.Load += new System.EventHandler(this.materialCatalog1_Load_1);
+            // 
             // MainForm
             // 
             this.structuresExtender.SetAttributeName(this, null);
@@ -1153,7 +1154,6 @@ namespace Type17_ClipToStiffener
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.Label label6;
-        private Tekla.Structures.Dialog.UIControls.MaterialCatalog materialCatalog1;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox textBox11;
@@ -1201,5 +1201,6 @@ namespace Type17_ClipToStiffener
         private System.Windows.Forms.TextBox textBox22;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.TextBox textBox21;
+        private Tekla.Structures.Dialog.UIControls.MaterialCatalog materialCatalog1;
     }
 }
