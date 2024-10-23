@@ -58,22 +58,20 @@ namespace Type17_ClipToStiffener
         private void textBox10_TextChanged(object sender, EventArgs e)
         {
             
-            SetAttributeValue(textBox5, textBox10.Text);
+           
         }
 
         private void textBox11_TextChanged(object sender, EventArgs e)
         {
             
-            SetAttributeValue(textBox6, textBox11.Text);
+           
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
             try
             {
-                comboBox1.Items.Add("Left");
-                comboBox1.Items.Add("right");
-                comboBox1.SelectedIndex = 0;
+                
                 foreach (ComboBox item in new List<ComboBox> { comboBox5,comboBox4 ,comboBox6, comboBox7, comboBox8, comboBox9, comboBox10 })
                 {
                     item.Items.Add("Yes");
@@ -90,7 +88,7 @@ namespace Type17_ClipToStiffener
                 comboBox2.SelectedIndex = 0;
                 comboBox3.SelectedIndex = 0;
                 comboBox4.SelectedIndex = 0;
-                materialCatalog1.SelectedMaterial = "IS2062";
+               
             }
             catch (Exception e1 )
             {
@@ -116,17 +114,17 @@ namespace Type17_ClipToStiffener
         private void materialCatalog1_Load_1(object sender, EventArgs e)
         {
 
-            SetAttributeValue(textBox7, materialCatalog1.SelectedMaterial.ToString());
+            
         }
 
         private void textBox5_TextChanged(object sender, EventArgs e)
         {
-            SetAttributeValue(textBox10, textBox5.Text);
+           
         }
 
         private void textBox6_TextChanged(object sender, EventArgs e)
         {
-            SetAttributeValue(textBox11, textBox6.Text);
+            
         }
     }
 }

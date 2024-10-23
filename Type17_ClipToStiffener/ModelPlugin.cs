@@ -51,9 +51,6 @@ namespace Type17_ClipToStiffener
         [StructuresField("PlateWidth2")]
         public double PlateWidth2;
 
-        [StructuresField("Platepoaition")]
-        public int Platepoaition;
-
         [StructuresField("FlagBolt")]
         public int FlagBolt;
 
@@ -141,7 +138,7 @@ namespace Type17_ClipToStiffener
         private double _TopOffset ;
         private double _PlateWidth1;
         private double _PlateWidth2;
-        private int _Platepoaition;
+        
         private int _FlagBolt;
         private int _FlagWasher1;
         private int _FlagWasher2;
@@ -242,24 +239,17 @@ namespace Type17_ClipToStiffener
                 var beam1Input = Input[0];
                 Beam beam1 = myModel.SelectModelObject(beam1Input.GetInput() as Identifier) as Beam;                
                 Beam beam2 = myModel.SelectModelObject(Input[1].GetInput() as Identifier) as Beam;
+                
 
-                Point origin1 = beam1.EndPoint;
                 var girtCoord = beam1.GetCoordinateSystem();
-                girtCoord.Origin = origin1;
-                //girtCoord.AxisX = girtCoord.AxisX *- 1;
-
+               
                 TransformationPlane currentTransformation = myModel.GetWorkPlaneHandler().GetCurrentTransformationPlane();
                 var newWorkPlane = new TransformationPlane(girtCoord);
-                // workPlaneHandler.SetCurrentTransformationPlane(newWorkPlane);
                 myModel.GetWorkPlaneHandler().SetCurrentTransformationPlane(newWorkPlane);
 
                 ContourPlate cp = ContourFitPart(beam1, beam2, _Gap, _Material);
-                bool flag = true;
-                if(_Platepoaition == 0)
-                    flag = true;
-                else
-                    flag = false;
-                ArrayList poliplates = polibeamPlate(beam1,beam2,cp,_Gap,_PlateWidth1,_PlateWidth2,_PlateHight,_Thickness,_TopOffset,_Material,flag);
+               
+                ArrayList poliplates = polibeamPlate(beam1,beam2,cp,_Gap,_PlateWidth1,_PlateWidth2,_PlateHight,_Thickness,_TopOffset,_Material);
                 
                 BoltArray(cp,beam2, poliplates[0] as Part, poliplates[1] as Part);
 
@@ -290,7 +280,7 @@ namespace Type17_ClipToStiffener
             _PlateWidth1 = Data.PlateWidth1;
             _PlateWidth2 = Data.PlateWidth2;
             _TopOffset = Data.TopOffset;
-            _Platepoaition = Data.Platepoaition;
+            
             _FlagBolt = Data.FlagBolt;
             _FlagWasher1 = Data.FlagWasher1;
             _FlagWasher2 = Data.FlagWasher2;
@@ -348,12 +338,9 @@ namespace Type17_ClipToStiffener
             }
             if (IsDefaultValue(_TopOffset))
             {
-                _TopOffset = 0;
+                _TopOffset = -1;
             }
-            if (IsDefaultValue(_Platepoaition))
-            {
-                _Platepoaition = 0;
-            }
+           
             if(IsDefaultValue(_BoltSize))
             {
                 _BoltSize = 0;
@@ -408,7 +395,7 @@ namespace Type17_ClipToStiffener
             }
             if(IsDefaultValue(_BA1yText))
             {
-                _BA1yText = "";
+                _BA1yText = "50";
             }
             if(IsDefaultValue(_BA2xCount))
             {
@@ -424,7 +411,7 @@ namespace Type17_ClipToStiffener
             }
             if(IsDefaultValue(_BA2yText))
             {
-                _BA2yText = "";
+                _BA2yText = "50";
             }
             if(IsDefaultValue(_BA1OffsetX))
                 { _BA1OffsetX = 0; }
@@ -442,7 +429,7 @@ namespace Type17_ClipToStiffener
         private ContourPlate ContourFitPart(Beam beam1, Beam beam2 , double gap, string material)
         {
             
-            List<Face_> beam1_faces = get_faces(beam1);
+            List<Face_> beam1_faces = get_faces(beam1,true);
             ArrayList beam1_centerLine = beam1.GetCenterLine(false);
             ArrayList beam2_centerLine = beam2.GetCenterLine(false);
             Face_ face = null;
@@ -470,7 +457,7 @@ namespace Type17_ClipToStiffener
             fitting.Plane.AxisY = yAxis;
             fitting.Father = beam2;
             fitting.Insert();
-            List<Face_> beam2_faces = get_faces(beam2);
+            List<Face_> beam2_faces = get_faces(beam2,false);
 
             if (Distance.PointToPlane(MidPoint(beam1_centerLine[0] as Point, beam1_centerLine[1] as Point), ConvertFaceToGeometricPlane(beam2_faces[12].Face)) < Distance.PointToPlane(MidPoint(beam1_centerLine[0] as Point, beam1_centerLine[1] as Point), ConvertFaceToGeometricPlane(beam2_faces[13].Face)))
             {
@@ -569,8 +556,10 @@ namespace Type17_ClipToStiffener
             Point po3 = GetClosestPointOnLineSegment(hold, Intersection.LineToPlane(line3, ConvertFaceToGeometricPlane(beam1_faces[12].Face)), Intersection.LineToPlane(line3, ConvertFaceToGeometricPlane(beam1_faces[13].Face)));
             Point po4 = GetClosestPointOnLineSegment(hold, Intersection.LineToPlane(line4, ConvertFaceToGeometricPlane(beam1_faces[12].Face)), Intersection.LineToPlane(line4, ConvertFaceToGeometricPlane(beam1_faces[13].Face)));
             countourPoints.Clear();
+            double webThickness = 0.0;
 
-            double width = CalculateDistanceBetweenFaces(beam2_faces[2].Face, beam2_faces[8].Face);
+            beam2.GetReportProperty("PROFILE.WEB_THICKNESS", ref webThickness);
+            double width = webThickness;
             foreach (Point po in new List<Point> { po1, po2, po3, po4 }) 
             {
                 if(new List<Point> { po1,po4 }.Contains(po))
@@ -608,10 +597,10 @@ namespace Type17_ClipToStiffener
             
             return cp1;
         }
-        private ArrayList polibeamPlate(Beam beam1, Beam beam2, ContourPlate cp,double gap ,double width1, double width2, double hight, double thickness, double topOffset, string material , bool positionFlag)
+        private ArrayList polibeamPlate(Beam beam1, Beam beam2, ContourPlate cp,double gap ,double width1, double width2, double hight, double thickness, double topOffset, string material )
         {
             
-            List<Face_> face_s = get_faces(cp);
+            List<Face_> face_s = get_faces(cp,false);
             List<Face> faces = new List<Face>();
             foreach (Face_ f in face_s)
             {
@@ -619,8 +608,8 @@ namespace Type17_ClipToStiffener
             } 
             List<Face> cp_faces = faces.OrderByDescending(fa => CalculateFaceArea(fa)).ToList();
             faces.Clear();
-            List<Face_> beam1_faces = get_faces(beam1);
-            List<Face_> beam2_faces = get_faces(beam2);
+            List<Face_> beam1_faces = get_faces(beam1, true);
+            List<Face_> beam2_faces = get_faces(beam2, false);
             foreach (Face_ f in beam2_faces)
             {
                 faces.Add(f.Face); 
@@ -634,15 +623,14 @@ namespace Type17_ClipToStiffener
             if (Distance.PointToPlane(mid, ConvertFaceToGeometricPlane(beam1_faces[0].Face)) < Distance.PointToPlane(mid, ConvertFaceToGeometricPlane(beam1_faces[10].Face)))
             {
                 face = beam1_faces[0];
-                depthFlag = false;
+                depthFlag = true;
             }
             else
             {
                 face = beam1_faces[10];
-                depthFlag = true;
+                depthFlag = false;
             }
-            if (!positionFlag)
-                depthFlag = !depthFlag;
+            
             Vector vector = beam1_faces[5].Vector;
             Point point = Get_Points(beam1_faces[5].Face)[0] as Point;
             double diffrence = CalculateDistanceBetweenFaces(beam1_faces[5].Face, beam1_faces[11].Face)/2;
@@ -706,18 +694,35 @@ namespace Type17_ClipToStiffener
                     }
                    
                 }
+                Vector vector0 = beam1_faces[5].Vector,
+                    vector1;
+                Point po = new Point();
+                if (vector0.Y > 0)
+                   {
+                    po = Projection.PointToPlane(center1, ConvertFaceToGeometricPlane(beam1_faces[5].Face)); 
+                    vector1 = beam1_faces[5].Vector;
+                }
+                else
+                { 
+                    po = Projection.PointToPlane(center1, ConvertFaceToGeometricPlane(beam1_faces[11].Face)); 
+                    vector1 = beam1_faces[11].Vector;
+                }
+                
+                GeometricPlane g1 = new GeometricPlane(po-vector1*(_TopOffset +(hight/2)),vector1);
                 ArrayList countourPoints = new ArrayList();
                 foreach (Point p in new List<Point> {poliPointA1 , center1 ,poliPointB1 })
                 {
-                    
-                    ContourPoint contourPoint = new ContourPoint(p, new Chamfer());
+                    Point hold = p;
+                    if(_TopOffset != -1)
+                        hold = Projection.PointToPlane(p,g1 );
+                    ContourPoint contourPoint = new ContourPoint(hold, new Chamfer());
                     countourPoints.Add(contourPoint);
                 }
                 PolyBeam pb = new PolyBeam();
                 pb.Contour.ContourPoints = countourPoints;
                 pb.Profile.ProfileString = "PLT"+thickness+"*"+hight;
-                pb.Position.Depth = Position.DepthEnum.FRONT;
-                pb.Position.PlaneOffset = topOffset;
+                pb.Position.Depth = (depthFlag)? Position.DepthEnum.FRONT : Position.DepthEnum.BEHIND;
+                pb.Position.PlaneOffset = 0;
                 pb.Position.Plane = Position.PlaneEnum.MIDDLE;
                 pb.Position.Rotation = Position.RotationEnum.FRONT;
                 pb.Material.MaterialString = material;
@@ -726,15 +731,17 @@ namespace Type17_ClipToStiffener
                 countourPoints.Clear();
                 foreach (Point p in new List<Point> { poliPointA2, center2, poliPointB2 })
                 {
-                    
-                    ContourPoint contourPoint = new ContourPoint(p, new Chamfer());
+                    Point hold = p;
+                    if (_TopOffset != -1)
+                        hold = Projection.PointToPlane(p, g1);
+                    ContourPoint contourPoint = new ContourPoint(hold, new Chamfer());
                     countourPoints.Add(contourPoint);
                 }
                 PolyBeam pb1 = new PolyBeam();
                 pb1.Contour.ContourPoints = countourPoints;
                 pb1.Profile.ProfileString = "PLT" + thickness + "*" + hight;
-                pb1.Position.Depth = Position.DepthEnum.BEHIND;
-                pb1.Position.PlaneOffset = topOffset;
+                pb1.Position.Depth =(depthFlag)? Position.DepthEnum.BEHIND : Position.DepthEnum.FRONT;
+                pb1.Position.PlaneOffset = 0;
                 pb1.Position.Plane =  Position.PlaneEnum.MIDDLE ;
                 pb1.Position.Rotation = Position.RotationEnum.FRONT;
                 pb1.Material.MaterialString = material;
@@ -811,12 +818,12 @@ namespace Type17_ClipToStiffener
             TransformationPlane part2Plane = new TransformationPlane(part2.GetCoordinateSystem());
             try
             {
-                List<Face_> part1Faces = get_faces(part1);
+                List<Face_> part1Faces = get_faces(part1, false);
                 List<Face_> Part1_Faces = part1Faces.OrderByDescending(fa => CalculateFaceArea(fa)).ToList();
-                List<Face_> part2Faces = get_faces(part2);
+                List<Face_> part2Faces = get_faces(part2, false);
                 List<Face_> Part2_Faces = part2Faces.OrderByDescending(fa => CalculateFaceArea(fa)).ToList();
                 ArrayList Part1_Points = Get_Points(Part1_Faces[0].Face);
-
+                ArrayList cp1_centerLine = cp1.GetCenterLine(false);
                 BoltArray bA = new BoltArray();
                 bA.PartToBeBolted = cp1;
 
@@ -824,10 +831,11 @@ namespace Type17_ClipToStiffener
                 bA.AddOtherPartToBolt(part1);
                 ContourPlate cp = part1 as ContourPlate;
                 ArrayList points = cp.Contour.ContourPoints;
-
                 Point cpMid = MidPoint(points[0] as Point, points[2] as Point);
+                
+                cpMid = Projection.PointToLine(cpMid,new Line( cp1_centerLine[0] as Point, cp1_centerLine[1] as Point));
                 Point refference = MidPoint(points[3] as Point, points[2] as Point);
-                List<Face_> cp1_faces = get_faces(cp1);
+                List<Face_> cp1_faces = get_faces(cp1, false);
                 GeometricPlane geometricPlane = new GeometricPlane();
                 if (CalculateDistanceBetweenFaces(Part1_Faces[0].Face, cp1_faces[1].Face) > CalculateDistanceBetweenFaces(Part1_Faces[0].Face, cp1_faces[2].Face))
                 {
@@ -891,6 +899,7 @@ namespace Type17_ClipToStiffener
                 }
                 bA.StartPointOffset.Dx = _BA1OffsetX;
                 bA.EndPointOffset.Dx = _BA1OffsetX;
+               
                 if (doubles != null)
                     doubles.Clear();
                 doubles = InputConverter(_BA1yText);
@@ -920,7 +929,6 @@ namespace Type17_ClipToStiffener
                         }
                     }
                 }
-
 
                 bA.StartPointOffset.Dz = _BA1OffsetY;
                 bA.EndPointOffset.Dz = _BA1OffsetY;
@@ -1079,10 +1087,10 @@ namespace Type17_ClipToStiffener
                 Vector = vector;
             }
         }
-        private List<Face_> get_faces(Part beam)
+        private List<Face_> get_faces(Part beam ,bool cutflag)
         {
 
-            Solid solid = beam.GetSolid();
+            Solid solid = (cutflag) ? beam.GetSolid(0) : beam.GetSolid();
             FaceEnumerator faceEnumerator = solid.GetFaceEnumerator();
             List<Face_> faces = new List<Face_>();
             while (faceEnumerator.MoveNext())
