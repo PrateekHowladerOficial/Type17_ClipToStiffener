@@ -117,6 +117,9 @@ namespace Type17_ClipToStiffener
         [StructuresField("BA2OffsetY")]
         public double BA2OffsetY;
 
+        [StructuresField("PlatePosition")]
+        public int PlatePosition;
+
         #endregion
     }
 
@@ -161,6 +164,7 @@ namespace Type17_ClipToStiffener
         private double _BA1OffsetY;
         private double _BA2OffsetX;
         private double _BA2OffsetY;
+        private int _PlatePosition;
 
         private List<string> _BoltStandardEnum = new List<string>
         {
@@ -248,13 +252,27 @@ namespace Type17_ClipToStiffener
                 myModel.GetWorkPlaneHandler().SetCurrentTransformationPlane(newWorkPlane);
 
                 ContourPlate cp = ContourFitPart(beam1, beam2, _Gap, _Material);
-               
-                ArrayList poliplates = polibeamPlate(beam1,beam2,cp,_Gap,_PlateWidth1,_PlateWidth2,_PlateHight,_Thickness,_TopOffset,_Material);
+                
+                bool positionFlag  = (_PlatePosition != 0)? true : false;
+
+                ArrayList poliplates = polibeamPlate(beam1,beam2,cp,_Gap,_PlateWidth1,_PlateWidth2,_PlateHight,_Thickness,_TopOffset,_Material, positionFlag);
                 
                 BoltArray(cp,beam2, poliplates[0] as Part, poliplates[1] as Part);
 
+                Weld Weld = new Weld();
+                Weld.MainObject = beam1;
+                Weld.SecondaryObject = cp;
+                Weld.TypeAbove = BaseWeld.WeldTypeEnum.WELD_TYPE_FILLET;
+                Weld.TypeBelow = BaseWeld.WeldTypeEnum.WELD_TYPE_FILLET;
+                Weld.ConnectAssemblies = true;
+                Weld.LengthAbove = 12;
+                Weld.TypeBelow = BaseWeld.WeldTypeEnum.WELD_TYPE_SLOT;
+                Weld.Insert();
+
+
                 myModel.GetWorkPlaneHandler().SetCurrentTransformationPlane(currentTransformation);
-            
+                
+
             }
             catch (Exception Exc)
             {
@@ -303,6 +321,9 @@ namespace Type17_ClipToStiffener
             _BA1OffsetY = Data.BA1OffsetY;
             _BA2OffsetX = Data.BA2OffsetX;
             _BA2OffsetY = Data.BA2OffsetY;
+
+            _PlatePosition = Data.PlatePosition;
+
             if (IsDefaultValue(_Thickness))
             {
                 _Thickness = 10;
@@ -423,7 +444,10 @@ namespace Type17_ClipToStiffener
             {
                 _BA2OffsetY = 0;
             }
-            
+            if (IsDefaultValue(_PlatePosition))
+                _PlatePosition = 0;
+
+
         }
         
         private ContourPlate ContourFitPart(Beam beam1, Beam beam2 , double gap, string material)
@@ -581,23 +605,9 @@ namespace Type17_ClipToStiffener
             cp1.Material.MaterialString = "IS2062";
             cp1.Position.Depth = Position.DepthEnum.MIDDLE;
             cp1.Insert();
-            
-            
-
-            Weld Weld = new Weld();
-            Weld.MainObject = cp1;
-            Weld.SecondaryObject = beam1;
-            Weld.TypeAbove = BaseWeld.WeldTypeEnum.WELD_TYPE_FILLET;
-            Weld.TypeBelow = BaseWeld.WeldTypeEnum.WELD_TYPE_FILLET;
-            Weld.LengthAbove = 12;
-            Weld.TypeBelow = BaseWeld.WeldTypeEnum.WELD_TYPE_SLOT;
-            Weld.Insert();
-
-            
-            
             return cp1;
         }
-        private ArrayList polibeamPlate(Beam beam1, Beam beam2, ContourPlate cp,double gap ,double width1, double width2, double hight, double thickness, double topOffset, string material )
+        private ArrayList polibeamPlate(Beam beam1, Beam beam2, ContourPlate cp,double gap ,double width1, double width2, double hight, double thickness, double topOffset, string material,bool position )
         {
             
             List<Face_> face_s = get_faces(cp,false);
@@ -623,12 +633,10 @@ namespace Type17_ClipToStiffener
             if (Distance.PointToPlane(mid, ConvertFaceToGeometricPlane(beam1_faces[0].Face)) < Distance.PointToPlane(mid, ConvertFaceToGeometricPlane(beam1_faces[10].Face)))
             {
                 face = beam1_faces[0];
-                depthFlag = true;
             }
             else
             {
                 face = beam1_faces[10];
-                depthFlag = false;
             }
             
             Vector vector = beam1_faces[5].Vector;
@@ -673,7 +681,7 @@ namespace Type17_ClipToStiffener
                         poliPointA1 = FindPointOnLine(center1, p2, width1);
                         poliPointA2 = FindClosestPointOnPlane(plB, poliPointA1);
                     }
-                    
+                    depthFlag = true;
                 }
                 else
                 {
@@ -692,7 +700,7 @@ namespace Type17_ClipToStiffener
                         poliPointA1 = FindPointOnLine(center1, p1, width1);
                         poliPointA2 = FindClosestPointOnPlane(plB, poliPointA1);
                     }
-                   
+                    depthFlag = false;
                 }
                 Vector vector0 = beam1_faces[5].Vector,
                     vector1;
@@ -707,7 +715,8 @@ namespace Type17_ClipToStiffener
                     po = Projection.PointToPlane(center1, ConvertFaceToGeometricPlane(beam1_faces[11].Face)); 
                     vector1 = beam1_faces[11].Vector;
                 }
-                
+                if (position)
+                    depthFlag = !depthFlag;
                 GeometricPlane g1 = new GeometricPlane(po-vector1*(_TopOffset +(hight/2)),vector1);
                 ArrayList countourPoints = new ArrayList();
                 foreach (Point p in new List<Point> {poliPointA1 , center1 ,poliPointB1 })
