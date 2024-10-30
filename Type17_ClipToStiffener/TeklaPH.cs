@@ -45,10 +45,10 @@ namespace TeklaPH
 
             return faces;
         }
-        public List<Face_> Get_faces(Part beam, bool cutflag)
+        public List<Face_> Get_faces(Part beam, bool raw)
         {
 
-            Solid solid = (cutflag) ? beam.GetSolid(0) : beam.GetSolid();
+            Solid solid = (raw) ? beam.GetSolid(0) : beam.GetSolid();
             FaceEnumerator faceEnumerator = solid.GetFaceEnumerator();
             List<Face_> faces = new List<Face_>();
             while (faceEnumerator.MoveNext())
@@ -341,6 +341,30 @@ namespace TeklaPH
 
             return isInside;
         }
+        public static LineSegment FindPerpendicularLineSegment(Tekla.Structures.Geometry3d.Line l1, GeometricPlane gp1, Point p1, double length)
+        {
+            Tekla.Structures.Geometry3d.Line line = Projection.LineToPlane(l1, gp1);
+            // Step 1: Get the direction vector of line l1
+            Vector directionL1 = line.Direction.GetNormal();
+            
+            // Step 2: Find the cross product of the direction vector of the line and the normal of the geometric plane
+            Vector perpendicularDirection = directionL1.Cross(gp1.GetNormal());
+
+            // Step 3: Scale the perpendicular direction to the desired length (100 units)
+            Vector scaledPerpendicular = new Vector(
+                perpendicularDirection.X * (length / 2),
+                perpendicularDirection.Y * (length / 2),
+                perpendicularDirection.Z * (length / 2)
+            );
+
+            // Step 4: Find the start and end points of the perpendicular line segment
+            Point startPoint = p1 - scaledPerpendicular; // Half the length in one direction
+            Point endPoint = p1 + scaledPerpendicular;   // Half the length in the opposite direction
+
+            // Step 5: Return the perpendicular line segment
+            return new LineSegment(startPoint, endPoint);
+        }
+
     }
     public class Input
     {

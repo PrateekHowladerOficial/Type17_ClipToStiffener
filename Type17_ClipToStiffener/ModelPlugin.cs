@@ -462,7 +462,7 @@ namespace Type17_ClipToStiffener
             ArrayList beam1_centerLine = beam1.GetCenterLine(false);
             ArrayList beam2_centerLine = beam2.GetCenterLine(false);
             Faces.Face_ face = null;
-            int beam2FaceIndex = -1, beam1FaceIndex = -1;
+            int  beam1FaceIndex = -1;
             Point mid = MidPoint(beam2_centerLine[0] as Point, beam2_centerLine[1] as Point);
             if (Distance.PointToPlane(mid, Faces.ConvertFaceToGeometricPlane(beam1_faces[0].Face)) < Distance.PointToPlane(mid, Faces.ConvertFaceToGeometricPlane(beam1_faces[10].Face)))
             {
@@ -487,19 +487,46 @@ namespace Type17_ClipToStiffener
             fitting.Father = beam2;
             fitting.Insert();
             List<Faces. Face_> beam2_faces = Faces.Get_faces(beam2,false);
-
-            if (Distance.PointToPlane(MidPoint(beam1_centerLine[0] as Point, beam1_centerLine[1] as Point), Faces.ConvertFaceToGeometricPlane(beam2_faces[12].Face)) < Distance.PointToPlane(MidPoint(beam1_centerLine[0] as Point, beam1_centerLine[1] as Point), Faces.ConvertFaceToGeometricPlane(beam2_faces[13].Face)))
+            Line lin = new Line(beam1_centerLine[0] as Point, beam1_centerLine[1] as Point);
+            LineSegment lin2 = TeklaPH.Line.FindPerpendicularLineSegment(lin, Faces.ConvertFaceToGeometricPlane(beam1_faces[2].Face), mid, 1000);
+            GeometricPlane plane2 = null;
+            Faces.Face_ holdFace = null;
+            double d = double.MaxValue;
+            foreach (var f in beam2_faces)
             {
-                beam2FaceIndex = 12;
-            }
-            else
-            {
-                beam2FaceIndex = 13;
+                ArrayList po = Faces.Get_Points(f.Face);
+                if (po.Count == 12)
+                {
+                  
+                    double d2 = Distance.PointToPlane(MidPoint(beam1_centerLine[0] as Point, beam1_centerLine[1] as Point), Faces.ConvertFaceToGeometricPlane(f.Face));
+                    if(d>d2)
+                    {
+                        holdFace = f;
+                    }
+                }
             }
 
-            ArrayList points = Faces.Get_Points(beam2_faces[beam2FaceIndex].Face);
+            
+
+            ArrayList points = Faces.Get_Points(holdFace.Face);
             List<Point> points1 = new List<Point>();
-            GeometricPlane plane = Faces.ConvertFaceToGeometricPlane(beam2_faces[beam2FaceIndex].Face),plane1 = Faces.ConvertFaceToGeometricPlane(beam2_faces[5].Face);
+            d = -1;
+            foreach(var f in beam2_faces)
+            {
+                GeometricPlane g = Faces.ConvertFaceToGeometricPlane(f.Face);
+                Point point2 = Intersection.LineSegmentToPlane(lin2, g);
+                if(point2 != null)
+                {
+                double d1 = Distance.PointToPoint(mid,point2);
+                    if (d < d1)
+                    {
+                        plane2 = g;
+                        d = d1;
+                    }
+                }
+            }
+            GeometricPlane plane = Faces.ConvertFaceToGeometricPlane(holdFace.Face), plane1 = plane2;
+
             foreach (Point p in points)
             {
                 
@@ -529,6 +556,7 @@ namespace Type17_ClipToStiffener
                     partCutFlag = false;
             }
             ArrayList countourPoints = new ArrayList();
+            beam2_faces = Faces.Get_faces(beam2,true);
             if(partCutFlag)
             {
                 Point center = Intersection.LineToPlane(new Line(MidPoint(closest, farest), Projection.PointToPlane(mid, plane1)), plane);
