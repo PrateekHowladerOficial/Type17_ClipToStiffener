@@ -270,7 +270,7 @@ namespace TeklaPH
             Point mid = new Point((point.X + point1.X) / 2, (point.Y + point1.Y) / 2, (point.Z + point1.Z) / 2);
             return mid;
         }
-        public  Point FindPointOnLine(Point startPoint, Point secondPoint, double distance)
+        public static Point FindPointOnLine(Point startPoint, Point secondPoint, double distance)
         {
             if (distance == 0)
                 return startPoint;
@@ -513,7 +513,7 @@ namespace TeklaPH
                     Point point1 = Projection.PointToPlane(holdIntersection, ConvertFaceToGeometricPlane(beam1_faces[n].Face)),
                         point2 = Projection.PointToPlane(point1, ConvertFaceToGeometricPlane(beam1_faces[edgeIndex].Face));
                     Beam beam = new Beam();
-                    beam.StartPoint = point1; beam.EndPoint =line. FindPointOnLine(point2, point1, gap * -1);
+                    beam.StartPoint = point1; beam.EndPoint =TeklaPH.Line.FindPointOnLine(point2, point1, gap * -1);
                     double dis = faces. CalculateDistanceBetweenFaces(beam2_faces[0].Face, beam2_faces[10].Face);
                     beam.Profile.ProfileString = "PLT" + thickness * 2 + "*" + dis * 1.5;
                     beam.Position.Depth = Position.DepthEnum.MIDDLE;
@@ -547,10 +547,10 @@ namespace TeklaPH
             {
                 if (Distance.PointToPoint(intersectionMidPoint, part1_centerLine[0] as Point) > Distance.PointToPoint(intersectionMidPoint, part1_centerLine[1] as Point))
                 {
-                    p1 = line.FindPointOnLine(part1_centerLine[0] as Point, part1_centerLine[1] as Point, d1 - d2);
+                    p1 = TeklaPH.Line.FindPointOnLine(part1_centerLine[0] as Point, part1_centerLine[1] as Point, d1 - d2);
                 }
                 else
-                    p1 = line.FindPointOnLine(part1_centerLine[1] as Point, part1_centerLine[0] as Point, d1 - d2);
+                    p1 = TeklaPH.Line.FindPointOnLine(part1_centerLine[1] as Point, part1_centerLine[0] as Point, d1 - d2);
 
                 if (Distance.PointToPoint(intersectionMidPoint, part2_centerLine[0] as Point) > Distance.PointToPoint(intersectionMidPoint, part2_centerLine[1] as Point))
                     p2 = part2_centerLine[0] as Point;
@@ -563,10 +563,10 @@ namespace TeklaPH
             {
                 if (Distance.PointToPoint(intersectionMidPoint, part2_centerLine[0] as Point) > Distance.PointToPoint(intersectionMidPoint, part2_centerLine[1] as Point))
                 {
-                    p1 = line.FindPointOnLine(part2_centerLine[0] as Point, part2_centerLine[1] as Point, d2 - d1);
+                    p1 = TeklaPH.Line.FindPointOnLine(part2_centerLine[0] as Point, part2_centerLine[1] as Point, d2 - d1);
                 }
                 else
-                    p1 = line.FindPointOnLine(part2_centerLine[1] as Point, part2_centerLine[0] as Point, d2 - d1);
+                    p1 = TeklaPH.Line.FindPointOnLine(part2_centerLine[1] as Point, part2_centerLine[0] as Point, d2 - d1);
 
                 if (Distance.PointToPoint(intersectionMidPoint, part1_centerLine[0] as Point) > Distance.PointToPoint(intersectionMidPoint, part1_centerLine[1] as Point))
                     p2 = part1_centerLine[0] as Point;
