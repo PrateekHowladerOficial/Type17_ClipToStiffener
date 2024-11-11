@@ -15,8 +15,12 @@ using static Tekla.Structures.Model.Chamfer;
 using Identifier = Tekla.Structures.Identifier;
 using Line = Tekla.Structures.Geometry3d.Line;
 using Fitting = Tekla.Structures.Model.Fitting;
-
+using Vector = Tekla.Structures.Geometry3d.Vector;
+using Point = Tekla.Structures.Geometry3d.Point;
+using MessageBox = System.Windows.Forms.MessageBox;
 using TeklaPH;
+using System.Windows;
+
 
 namespace Type17_ClipToStiffener
 
@@ -633,14 +637,14 @@ namespace Type17_ClipToStiffener
             ContourPlate cp1 = new ContourPlate();
             
             cp1.Contour.ContourPoints = countourPoints;
-            cp1.Profile.ProfileString = "PLT" + width ;
+            cp1.Profile.ProfileString = "PLT" + _Thickness ;
             cp1.Class = "5";
             cp1.Material.MaterialString = "IS2062";
             cp1.Position.Depth = Position.DepthEnum.MIDDLE;
             cp1.Insert();
             return cp1;
         }
-        private ArrayList polibeamPlate(Beam beam1, Beam beam2, ContourPlate cp,double gap ,double width1, double width2, double hight, double thickness, double topOffset, string material,bool position )
+        private ArrayList polibeamPlate(Beam beam1, Beam beam2, ContourPlate cp,double gap ,double webGap, double width2, double hight, double thickness, double topOffset, string material,bool position )
         {
             Faces Faces = new Faces();
             TeklaPH.Line _Line = new TeklaPH.Line();
@@ -686,8 +690,21 @@ namespace Type17_ClipToStiffener
             {
                 GeometricPlane plA = Faces.ConvertFaceToGeometricPlane(cp_faces[0]),
                     plB = Faces.ConvertFaceToGeometricPlane(cp_faces[1]),
-                    pl1 = Faces.ConvertFaceToGeometricPlane(beam2_Face[0]),
-                    pl2 = Faces.ConvertFaceToGeometricPlane(beam2_Face[1]);
+                    a = Faces.ConvertFaceToGeometricPlane(beam2_Face[0]),
+                    b = Faces.ConvertFaceToGeometricPlane(beam2_Face[1]),
+                    pl1 , pl2;
+
+                Point a1 = Projection.PointToPlane(mid , a),
+                    a2 = Projection.PointToPlane(mid , b);
+                if(a1.X < a2.X)
+                {
+                    pl1 = a;
+                    pl2 = b;
+                }
+                else
+                {
+                    pl1 = b; pl2 = a;
+                }
 
                 Line line1 = Intersection.PlaneToPlane(plA, pl1),
                     line2 = Intersection.PlaneToPlane(plA, pl2),
@@ -706,48 +723,55 @@ namespace Type17_ClipToStiffener
                     center1 = p1; center2 = p4;
                     if(Distance.PointToPlane(center1,refference)< Distance.PointToPlane(center2, refference))
                     {
-                        poliPointB2 = TeklaPH.Line.FindPointOnLine(center2, p2, width2);
-                        poliPointB1 = Projection.PointToPlane(poliPointB2, pl1);
-                        
-                        poliPointA2 = TeklaPH.Line.FindPointOnLine(center2 , p3, width1);
+                        poliPointA2 = TeklaPH.Line.FindPointOnLine(center2 , p3, webGap);
                         Point p = Projection.PointToPlane(poliPointA2,gp);
-                        poliPointA2 = TeklaPH.Line.FindPointOnLine (p , poliPointA2, width1);
+                        poliPointA2 = TeklaPH.Line.FindPointOnLine (p , poliPointA2, webGap);
                         poliPointA1 = Projection.PointToPlane(poliPointA2, plA);
+                        double d = Distance.PointToPoint(center2, poliPointA2);
+                        poliPointB2 = TeklaPH.Line.FindPointOnLine(center2, p2, (Distance.PointToPoint(center2, mid) > Distance.PointToPoint(p2, mid)) ? d : d * -1);
+                        poliPointB1 = Projection.PointToPlane(poliPointB2, pl1);
                     }
                     else
                     {
-                        poliPointB1 = TeklaPH.Line.FindPointOnLine(center1, p3, width2);
-                        poliPointB2 = Projection.PointToPlane(poliPointB1, pl2);
-                        poliPointA1 = TeklaPH.Line.FindPointOnLine(center1, p2, width1);
+                        poliPointA1 = TeklaPH.Line.FindPointOnLine(center1, p2, webGap);
                         Point p = Projection.PointToPlane(poliPointA1, gp);
-                        poliPointA1 = TeklaPH.Line.FindPointOnLine(p, poliPointA1, width1);
+                        poliPointA1 = TeklaPH.Line.FindPointOnLine(p, poliPointA1, webGap);
                         poliPointA2 = Projection.PointToPlane(poliPointA1, plB);
+                        double d = Distance.PointToPoint(center1, poliPointA1);
+                        poliPointB1 = TeklaPH.Line.FindPointOnLine(center1, p3, (Distance.PointToPoint(center1, mid) > Distance.PointToPoint(p3, mid)) ? d : d * -1);
+                        poliPointB2 = Projection.PointToPlane(poliPointB1, pl2);
                     }
-                    depthFlag = true;
+                    Vector gpVector = gp.GetNormal();
+                    depthFlag = (gpVector.Z > 0) ? false : true;
                 }
                 else
                 {
                     center1 = p2; center2 = p3;
                     if (Distance.PointToPlane(center1, refference) < Distance.PointToPlane(center2, refference))
                     {
-                        poliPointB2 = TeklaPH.Line.FindPointOnLine(center2, p1, width2);
-                        poliPointB1 = Projection.PointToPlane(poliPointB2, pl2);
-                        poliPointA2 = TeklaPH.Line.FindPointOnLine(center2, p4, width1);
+                        poliPointA2 = TeklaPH.Line.FindPointOnLine(center2, p4, webGap);
                         Point p = Projection.PointToPlane(poliPointA2, gp);
-                        poliPointA2 = TeklaPH.Line.FindPointOnLine(p, poliPointA2, width1);
+                        poliPointA2 = TeklaPH.Line.FindPointOnLine(p, poliPointA2, webGap);
                         poliPointA1 = Projection.PointToPlane(poliPointA2, plA);
+                        double d = Distance.PointToPoint(center2, poliPointA2);
+                        poliPointB2 = TeklaPH.Line.FindPointOnLine(center2, p1, (Distance.PointToPoint(center2, mid) > Distance.PointToPoint(p1, mid)) ? d : d * -1);
+                        poliPointB1 = Projection.PointToPlane(poliPointB2, pl2);
                     }
                     else
                     {
-                        poliPointB1 = TeklaPH.Line.FindPointOnLine(center1, p4, width2);
-                        poliPointB2 = Projection.PointToPlane(poliPointB1, pl1);
-                        poliPointA1 = TeklaPH.Line.FindPointOnLine(center1, p1, width1);
+                        poliPointA1 = TeklaPH.Line.FindPointOnLine(center1, p1, webGap);
                         Point p = Projection.PointToPlane(poliPointA1, gp);
-                        poliPointA1 = TeklaPH.Line.FindPointOnLine(p, poliPointA1, width1);
+                        poliPointA1 = TeklaPH.Line.FindPointOnLine(p, poliPointA1, webGap);
                         poliPointA2 = Projection.PointToPlane(poliPointA1, plB);
+                        double d = Distance.PointToPoint(center1, poliPointA1);
+                        poliPointB1 = TeklaPH.Line.FindPointOnLine(center1, p4, (Distance.PointToPoint(center1, mid) > Distance.PointToPoint(p4, mid)) ? d : d * -1);
+                        poliPointB2 = Projection.PointToPlane(poliPointB1, pl1);
                     }
-                    depthFlag = false;
+                    Vector gpVector = gp.GetNormal();
+                    depthFlag = (gpVector.Z > 0) ? true : false;
                 }
+              
+
                 Vector vector0 = beam1_faces[5].Vector,
                     vector1;
                 Point po = new Point();
@@ -820,9 +844,9 @@ namespace Type17_ClipToStiffener
                     p1a = Projection.PointToPlane(p1, refference),
                     p2a = Projection.PointToPlane(p2, refference);
                 
-                Point po1a = TeklaPH.Line.FindPointOnLine(p1, p1a, width1),
+                Point po1a = TeklaPH.Line.FindPointOnLine(p1, p1a, webGap),
                     po1b = TeklaPH.Line.FindPointOnLine(p1, p1a, width2 * -1),
-                    po2a = TeklaPH.Line.FindPointOnLine(p2, p2a, width1),
+                    po2a = TeklaPH.Line.FindPointOnLine(p2, p2a, webGap),
                     po2b = TeklaPH.Line.FindPointOnLine(p2, p2a, width2 * -1);
 
                 ArrayList countourPoints = new ArrayList();

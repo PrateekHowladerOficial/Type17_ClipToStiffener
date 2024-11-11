@@ -88,10 +88,7 @@ namespace Type17_ClipToStiffener
                 comboBox2.SelectedIndex = 0;
                 comboBox3.SelectedIndex = 0;
                 comboBox4.SelectedIndex = 0;
-                comboBox1.Items.Clear();
-                comboBox1.Items.Add("Normal");
-                comboBox1.Items.Add("Reverse");
-                comboBox1 .SelectedIndex = 0;
+               
             }
             
             catch (Exception e1 )

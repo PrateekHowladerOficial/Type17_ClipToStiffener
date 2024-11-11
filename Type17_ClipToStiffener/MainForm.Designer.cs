@@ -33,12 +33,9 @@ namespace Type17_ClipToStiffener
             this.OkApplyModifyGetOnOffCancel = new Tekla.Structures.Dialog.UIControls.OkApplyModifyGetOnOffCancel();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.ParametersTabPage = new System.Windows.Forms.TabPage();
-            this.label11 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
-            this.textBox6 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.textBox3 = new System.Windows.Forms.TextBox();
@@ -169,12 +166,9 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.ParametersTabPage, null);
             this.ParametersTabPage.BackColor = System.Drawing.Color.WhiteSmoke;
             this.structuresExtender.SetBindPropertyName(this.ParametersTabPage, null);
-            this.ParametersTabPage.Controls.Add(this.label11);
-            this.ParametersTabPage.Controls.Add(this.comboBox1);
             this.ParametersTabPage.Controls.Add(this.textBox9);
             this.ParametersTabPage.Controls.Add(this.textBox8);
             this.ParametersTabPage.Controls.Add(this.textBox7);
-            this.ParametersTabPage.Controls.Add(this.textBox6);
             this.ParametersTabPage.Controls.Add(this.textBox5);
             this.ParametersTabPage.Controls.Add(this.textBox4);
             this.ParametersTabPage.Controls.Add(this.textBox3);
@@ -199,35 +193,12 @@ namespace Type17_ClipToStiffener
             this.ParametersTabPage.Text = "Clip to Stiffner";
             this.ParametersTabPage.Click += new System.EventHandler(this.ParametersTabPage_Click);
             // 
-            // label11
-            // 
-            this.structuresExtender.SetAttributeName(this.label11, null);
-            this.structuresExtender.SetAttributeTypeName(this.label11, null);
-            this.label11.AutoSize = true;
-            this.structuresExtender.SetBindPropertyName(this.label11, null);
-            this.label11.Location = new System.Drawing.Point(651, 314);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(96, 16);
-            this.label11.TabIndex = 21;
-            this.label11.Text = "Plates Position";
-            // 
-            // comboBox1
-            // 
-            this.structuresExtender.SetAttributeName(this.comboBox1, "PlatePosition");
-            this.structuresExtender.SetAttributeTypeName(this.comboBox1, "Integer");
-            this.structuresExtender.SetBindPropertyName(this.comboBox1, null);
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(654, 333);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 24);
-            this.comboBox1.TabIndex = 20;
-            // 
             // textBox9
             // 
             this.structuresExtender.SetAttributeName(this.textBox9, "Finish");
             this.structuresExtender.SetAttributeTypeName(this.textBox9, "String");
             this.structuresExtender.SetBindPropertyName(this.textBox9, null);
-            this.textBox9.Location = new System.Drawing.Point(736, 59);
+            this.textBox9.Location = new System.Drawing.Point(341, 131);
             this.textBox9.Name = "textBox9";
             this.textBox9.Size = new System.Drawing.Size(100, 22);
             this.textBox9.TabIndex = 19;
@@ -237,7 +208,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox8, "Name");
             this.structuresExtender.SetAttributeTypeName(this.textBox8, "String");
             this.structuresExtender.SetBindPropertyName(this.textBox8, null);
-            this.textBox8.Location = new System.Drawing.Point(564, 59);
+            this.textBox8.Location = new System.Drawing.Point(180, 131);
             this.textBox8.Name = "textBox8";
             this.textBox8.Size = new System.Drawing.Size(100, 22);
             this.textBox8.TabIndex = 17;
@@ -253,23 +224,12 @@ namespace Type17_ClipToStiffener
             this.textBox7.TabIndex = 15;
             this.textBox7.TextChanged += new System.EventHandler(this.textBox7_TextChanged);
             // 
-            // textBox6
-            // 
-            this.structuresExtender.SetAttributeName(this.textBox6, "PlateWidth2");
-            this.structuresExtender.SetAttributeTypeName(this.textBox6, "Distance");
-            this.structuresExtender.SetBindPropertyName(this.textBox6, null);
-            this.textBox6.Location = new System.Drawing.Point(312, 435);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(100, 22);
-            this.textBox6.TabIndex = 13;
-            this.textBox6.TextChanged += new System.EventHandler(this.textBox6_TextChanged);
-            // 
             // textBox5
             // 
             this.structuresExtender.SetAttributeName(this.textBox5, "PlateWidth1");
             this.structuresExtender.SetAttributeTypeName(this.textBox5, "Distance");
             this.structuresExtender.SetBindPropertyName(this.textBox5, null);
-            this.textBox5.Location = new System.Drawing.Point(119, 435);
+            this.textBox5.Location = new System.Drawing.Point(109, 525);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(100, 22);
             this.textBox5.TabIndex = 11;
@@ -280,7 +240,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox4, "PlateHight");
             this.structuresExtender.SetAttributeTypeName(this.textBox4, "Distance");
             this.structuresExtender.SetBindPropertyName(this.textBox4, null);
-            this.textBox4.Location = new System.Drawing.Point(379, 189);
+            this.textBox4.Location = new System.Drawing.Point(369, 279);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(100, 22);
             this.textBox4.TabIndex = 9;
@@ -291,7 +251,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox3, "TopOffset");
             this.structuresExtender.SetAttributeTypeName(this.textBox3, "Distance");
             this.structuresExtender.SetBindPropertyName(this.textBox3, null);
-            this.textBox3.Location = new System.Drawing.Point(26, 189);
+            this.textBox3.Location = new System.Drawing.Point(16, 279);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(100, 22);
             this.textBox3.TabIndex = 7;
@@ -301,7 +261,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox2, "Gap");
             this.structuresExtender.SetAttributeTypeName(this.textBox2, "Distance");
             this.structuresExtender.SetBindPropertyName(this.textBox2, null);
-            this.textBox2.Location = new System.Drawing.Point(267, 144);
+            this.textBox2.Location = new System.Drawing.Point(257, 234);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 22);
             this.textBox2.TabIndex = 5;
@@ -322,7 +282,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.label10, null);
             this.label10.AutoSize = true;
             this.structuresExtender.SetBindPropertyName(this.label10, null);
-            this.label10.Location = new System.Drawing.Point(733, 30);
+            this.label10.Location = new System.Drawing.Point(338, 102);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(42, 16);
             this.label10.TabIndex = 18;
@@ -334,7 +294,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.label9, null);
             this.label9.AutoSize = true;
             this.structuresExtender.SetBindPropertyName(this.label9, null);
-            this.label9.Location = new System.Drawing.Point(561, 30);
+            this.label9.Location = new System.Drawing.Point(177, 102);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(44, 16);
             this.label9.TabIndex = 16;
@@ -358,7 +318,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.label6, null);
             this.label6.AutoSize = true;
             this.structuresExtender.SetBindPropertyName(this.label6, null);
-            this.label6.Location = new System.Drawing.Point(116, 406);
+            this.label6.Location = new System.Drawing.Point(106, 496);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(0, 16);
             this.label6.TabIndex = 10;
@@ -369,7 +329,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.label5, null);
             this.label5.AutoSize = true;
             this.structuresExtender.SetBindPropertyName(this.label5, null);
-            this.label5.Location = new System.Drawing.Point(376, 170);
+            this.label5.Location = new System.Drawing.Point(366, 260);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(72, 16);
             this.label5.TabIndex = 8;
@@ -381,7 +341,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.label4, null);
             this.label4.AutoSize = true;
             this.structuresExtender.SetBindPropertyName(this.label4, null);
-            this.label4.Location = new System.Drawing.Point(23, 160);
+            this.label4.Location = new System.Drawing.Point(13, 250);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(69, 16);
             this.label4.TabIndex = 6;
@@ -393,7 +353,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.label3, null);
             this.label3.AutoSize = true;
             this.structuresExtender.SetBindPropertyName(this.label3, null);
-            this.label3.Location = new System.Drawing.Point(309, 116);
+            this.label3.Location = new System.Drawing.Point(299, 206);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(33, 16);
             this.label3.TabIndex = 4;
@@ -405,9 +365,9 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.pictureBox1, null);
             this.structuresExtender.SetBindPropertyName(this.pictureBox1, null);
             this.pictureBox1.Image = global::Type17_ClipToStiffener.Properties.Resources.Screenshot_2024_11_05_110626;
-            this.pictureBox1.Location = new System.Drawing.Point(98, 160);
+            this.pictureBox1.Location = new System.Drawing.Point(88, 250);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(716, 436);
+            this.pictureBox1.Size = new System.Drawing.Size(391, 311);
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
             // 
@@ -1044,7 +1004,6 @@ namespace Type17_ClipToStiffener
         private System.Windows.Forms.TextBox textBox9;
         private System.Windows.Forms.TextBox textBox8;
         private System.Windows.Forms.TextBox textBox7;
-        private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.TextBox textBox5;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.TextBox textBox3;
@@ -1101,8 +1060,6 @@ namespace Type17_ClipToStiffener
         private System.Windows.Forms.ComboBox comboBox6;
         private System.Windows.Forms.ComboBox comboBox5;
         private System.Windows.Forms.PictureBox pictureBox3;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label7;
     }
