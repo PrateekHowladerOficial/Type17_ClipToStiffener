@@ -12,6 +12,7 @@ using Tekla.Structures.Model.UI;
 using Tekla.Structures.Plugins;
 using Tekla.Structures.Solid;
 using static Tekla.Structures.Model.Position;
+using TSG = Tekla.Structures.Geometry3d;
 using static TeklaPH.Faces;
 
 namespace TeklaPH
@@ -28,7 +29,7 @@ namespace TeklaPH
                 Vector = vector;
             }
         }
-        public List<Face_> Get_faces(Part beam)
+        public static List<Face_> Get_faces(Part beam)
         {
 
             Solid solid = beam.GetSolid();
@@ -45,7 +46,7 @@ namespace TeklaPH
 
             return faces;
         }
-        public List<Face_> Get_faces(Part beam, bool raw)
+        public static List<Face_> Get_faces(Part beam, bool raw)
         {
 
             Solid solid = (raw) ? beam.GetSolid(0) : beam.GetSolid();
@@ -62,9 +63,9 @@ namespace TeklaPH
 
             return faces;
         }
-        public double CalculateFaceArea(Face_ face)
+        public static double CalculateFaceArea(Face_ face)
         {
-            ArrayList facePoints = Get_Points(face.Face); // Assuming this method gets the list of points of the face
+            ArrayList facePoints = Faces.Get_Points(face.Face); // Assuming this method gets the list of points of the face
 
             if (facePoints.Count < 3)
                 return 0.0; // A face must have at least 3 points to form a polygon
@@ -84,7 +85,7 @@ namespace TeklaPH
 
             return totalArea;
         }
-        public double CalculateFaceArea(Face face)
+        public static double CalculateFaceArea(Face face)
         {
             ArrayList facePoints = Get_Points(face); // Assuming this method gets the list of points of the face
 
@@ -117,7 +118,7 @@ namespace TeklaPH
             double area = 0.5 * crossProduct.GetLength();
             return area;
         }
-        public ArrayList Get_Points(Face face)
+        public static ArrayList Get_Points(Face face)
         {
             ArrayList points = new ArrayList();
             LoopEnumerator loopEnumerator = face.GetLoopEnumerator();
@@ -204,7 +205,7 @@ namespace TeklaPH
 
             return geometricPlane;
         }
-        public double CalculateDistanceBetweenFaces(Face face1, Face face2)
+        public static double CalculateDistanceBetweenFaces(Face face1, Face face2)
         {
             // Get the loop vertices of both faces to extract points
             ArrayList face1Vertices = Get_Points(face1);
@@ -265,7 +266,7 @@ namespace TeklaPH
     }
     public class Line
     {
-        public Point MidPoint(Point point, Point point1)
+        public static Point MidPoint(Point point, Point point1)
         {
             Point mid = new Point((point.X + point1.X) / 2, (point.Y + point1.Y) / 2, (point.Z + point1.Z) / 2);
             return mid;
@@ -368,7 +369,7 @@ namespace TeklaPH
     }
     public class Input
     {
-        public List<double> InputConverter(string input)
+        public static List<double> InputConverter(string input)
         {
             if (input == "")
                 return null;
@@ -394,7 +395,7 @@ namespace TeklaPH
     }
     public class GeoPlane
     {
-        public  GeometricPlane CreatePlaneFromThreePoints(Point point1, Point point2, Point point3)
+        public static GeometricPlane CreatePlaneFromThreePoints(Point point1, Point point2, Point point3)
         {
             // Calculate two direction vectors on the plane
             Vector vector1 = new Vector(point2.X - point1.X, point2.Y - point1.Y, point2.Z - point1.Z);
@@ -408,6 +409,22 @@ namespace TeklaPH
 
             return plane;
         }
+        public static double DistanceBetweenParallelPlanes(GeometricPlane plane1, GeometricPlane plane2)
+        {
+           
+
+            // Planes are parallel if their normal vectors are either identical or opposite
+            if (!TSG.Parallel.PlaneToPlane(plane1,plane2))
+            {
+                throw new ArgumentException("The planes are not parallel.");
+            }
+
+            Point point = new Point(0, 0, 0);
+            Point p1 = Projection.PointToPlane(point, plane1),
+                p2 = Projection.PointToPlane(point, plane2);
+
+            return Distance.PointToPoint(p1, p2);
+        }
     }
     public class Fitting
     {
@@ -415,12 +432,12 @@ namespace TeklaPH
         {
             Faces faces = new Faces();
             Line line = new Line();
-            List<Face_> beam1_faces = faces.Get_faces(beam1);
+            List<Face_> beam1_faces = Get_faces(beam1);
             ArrayList beam1_centerLine = beam1.GetCenterLine(false);
             ArrayList beam2_centerLine = beam2.GetCenterLine(false);
             Face_ face = null;
 
-            Point mid = line.MidPoint(beam2_centerLine[0] as Point, beam2_centerLine[1] as Point);
+            Point mid = Line.MidPoint(beam2_centerLine[0] as Point, beam2_centerLine[1] as Point);
             if (Distance.PointToPlane(mid, ConvertFaceToGeometricPlane(beam1_faces[0].Face)) < Distance.PointToPlane(mid, ConvertFaceToGeometricPlane(beam1_faces[10].Face)))
             {
                 face = beam1_faces[0];
@@ -432,7 +449,7 @@ namespace TeklaPH
             Tekla.Structures.Model. Fitting fitting = new Tekla.Structures.Model.Fitting();
             fitting.Plane = new Plane();
             Vector vector = face.Vector;
-            Point point =faces. Get_Points(face.Face)[0] as Point;
+            Point point = Get_Points(face.Face)[0] as Point;
 
             Point point1 = new Point(point.X + gap * vector.X, point.Y + gap * vector.Y, point.Z + gap * vector.Z);
             fitting.Plane.Origin = point1;
@@ -449,12 +466,12 @@ namespace TeklaPH
         {
             Faces faces = new Faces();
             Line line = new Line();
-            List<Face_> beam1_faces = faces.Get_faces(beam1);
+            List<Face_> beam1_faces = Get_faces(beam1);
             ArrayList beam1_centerLine = beam1.GetCenterLine(false);
             ArrayList beam2_centerLine = beam2.GetCenterLine(false);
             Face_ face = null;
 
-            Point mid =line.MidPoint(beam2_centerLine[0] as Point, beam2_centerLine[1] as Point);
+            Point mid =Line.MidPoint(beam2_centerLine[0] as Point, beam2_centerLine[1] as Point);
             if (Distance.PointToPlane(mid, ConvertFaceToGeometricPlane(beam1_faces[2].Face)) < Distance.PointToPlane(mid, ConvertFaceToGeometricPlane(beam1_faces[8].Face)))
             {
                 face = beam1_faces[2];
@@ -466,7 +483,7 @@ namespace TeklaPH
             Tekla.Structures.Model.Fitting fitting = new Tekla.Structures.Model.Fitting();
             fitting.Plane = new Plane();
             Vector vector = face.Vector;
-            Point point = faces.Get_Points(face.Face)[0] as Point;
+            Point point = Get_Points(face.Face)[0] as Point;
 
             fitting.Plane.Origin = point;
 
@@ -482,13 +499,13 @@ namespace TeklaPH
         {
             Faces faces = new Faces();
             Line line = new Line();
-            List<Face_> beam1_faces =faces.Get_faces(beam1),
-                beam2_faces =faces .Get_faces(beam2);
+            List<Face_> beam1_faces =Get_faces(beam1),
+                beam2_faces =  Get_faces(beam2);
             ArrayList beam1_centerLine = beam1.GetCenterLine(false);
             ArrayList beam2_centerLine = beam2.GetCenterLine(false);
             Face_ face = null;
             int edgeIndex = -1;
-            Point mid =line. MidPoint(beam2_centerLine[0] as Point, beam2_centerLine[1] as Point);
+            Point mid =Line. MidPoint(beam2_centerLine[0] as Point, beam2_centerLine[1] as Point);
             if (Distance.PointToPlane(mid, ConvertFaceToGeometricPlane(beam1_faces[2].Face)) < Distance.PointToPlane(mid, ConvertFaceToGeometricPlane(beam1_faces[8].Face)))
             {
                 face = beam1_faces[2];
@@ -514,7 +531,7 @@ namespace TeklaPH
                         point2 = Projection.PointToPlane(point1, ConvertFaceToGeometricPlane(beam1_faces[edgeIndex].Face));
                     Beam beam = new Beam();
                     beam.StartPoint = point1; beam.EndPoint =TeklaPH.Line.FindPointOnLine(point2, point1, gap * -1);
-                    double dis = faces. CalculateDistanceBetweenFaces(beam2_faces[0].Face, beam2_faces[10].Face);
+                    double dis =  CalculateDistanceBetweenFaces(beam2_faces[0].Face, beam2_faces[10].Face);
                     beam.Profile.ProfileString = "PLT" + thickness * 2 + "*" + dis * 1.5;
                     beam.Position.Depth = Position.DepthEnum.MIDDLE;
                     beam.Position.Plane = Position.PlaneEnum.MIDDLE;
@@ -539,7 +556,7 @@ namespace TeklaPH
             ArrayList part2_centerLine = part2.GetCenterLine(false);
 
             LineSegment intersectLineSegment = Intersection.LineToLine(new Tekla.Structures.Geometry3d. Line(part1_centerLine[0] as Point, part1_centerLine[1] as Point), new Tekla.Structures.Geometry3d.Line (part2_centerLine[0] as Point, part2_centerLine[1] as Point));
-            Point intersectionMidPoint =line. MidPoint(intersectLineSegment.StartPoint, intersectLineSegment.EndPoint);
+            Point intersectionMidPoint = Line. MidPoint(intersectLineSegment.StartPoint, intersectLineSegment.EndPoint);
             double d1 = Distance.PointToPoint(part1_centerLine[0] as Point, part1_centerLine[1] as Point),
                 d2 = Distance.PointToPoint(part2_centerLine[0] as Point, part2_centerLine[1] as Point);
             Point p1, p2;
@@ -574,10 +591,10 @@ namespace TeklaPH
                     p2 = part1_centerLine[1] as Point;
 
             }
-            GeometricPlane newplain =geoPlane. CreatePlaneFromThreePoints(intersectionMidPoint, p1, p2);
-            Point mid =line. MidPoint(p1, p2);
+            GeometricPlane newplain =GeoPlane. CreatePlaneFromThreePoints(intersectionMidPoint, p1, p2);
+            Point mid = Line. MidPoint(p1, p2);
             Point point3 = mid + newplain.GetNormal() * 50;
-            GeometricPlane fittingPlain =geoPlane. CreatePlaneFromThreePoints(intersectionMidPoint, mid, point3);
+            GeometricPlane fittingPlain =GeoPlane. CreatePlaneFromThreePoints(intersectionMidPoint, mid, point3);
             Tekla.Structures.Model. Fitting fitting = new Tekla.Structures.Model.Fitting();
 
             Vector vector = newplain.GetNormal();
@@ -611,6 +628,27 @@ namespace TeklaPH
         {
             return Operation.DisplayPrompt( s );
           
+        }
+    }
+    public class SurfaceFinder
+    {
+        public static List<GeometricPlane> GetFlangeOutterSurfacePlane(Part part1)
+        {
+            List<Face_> face_s = Faces.Get_faces(part1,true);
+            ArrayList centerPoints = part1.GetCenterLine(false);
+            TSG.Line centerLine = new TSG.Line(centerPoints[0] as Point, centerPoints[1] as Point);
+            Point mid = Line.MidPoint(centerPoints[0] as Point, centerPoints[1] as Point);
+            face_s.RemoveAt(face_s.Count-1); 
+            face_s.RemoveAt(face_s.Count - 1);
+            List<Face_> cp_faces = face_s.OrderByDescending(fa =>Distance.PointToPoint(mid,Projection.PointToPlane(mid,ConvertFaceToGeometricPlane(fa.Face)))).ToList() ;
+            return new List<GeometricPlane> { ConvertFaceToGeometricPlane(cp_faces[0].Face), ConvertFaceToGeometricPlane(cp_faces[1].Face) };
+        }
+        public static double WebThickness(Part part)
+        {
+            double webThickness = 0;
+            part.GetReportProperty("PROFILE.WEB_THICKNESS", ref webThickness);
+            double width = webThickness;
+            return width;
         }
     }
 }
