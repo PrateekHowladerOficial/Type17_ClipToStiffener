@@ -799,6 +799,7 @@ namespace Type17_ClipToStiffener
                
                 Point center1 = new Point(), center2 = new Point();
                 Point poliPointA1 , poliPointA2 , poliPointB1, poliPointB2;
+                Vector gpVector = gp.GetNormal();
                 if (Distance.PointToPoint(p1,p4) < Distance.PointToPoint(p2, p3))
                 {
                     center1 = p1; center2 = p4;
@@ -811,6 +812,7 @@ namespace Type17_ClipToStiffener
                         double d = Distance.PointToPoint(center2, poliPointA2);
                         poliPointB2 = TeklaPH.Line.FindPointOnLine(center2, p2, (Distance.PointToPoint(center2, mid) > Distance.PointToPoint(p2, mid)) ? d : d * -1);
                         poliPointB1 = Projection.PointToPlane(poliPointB2, pl1);
+                        depthFlag = (gpVector.Z > 0) ? false : true;
                     }
                     else
                     {
@@ -821,9 +823,10 @@ namespace Type17_ClipToStiffener
                         double d = Distance.PointToPoint(center1, poliPointA1);
                         poliPointB1 = TeklaPH.Line.FindPointOnLine(center1, p3, (Distance.PointToPoint(center1, mid) > Distance.PointToPoint(p3, mid)) ? d : d * -1);
                         poliPointB2 = Projection.PointToPlane(poliPointB1, pl2);
+                        depthFlag = (gpVector.Z > 0) ? true : false;
                     }
-                    Vector gpVector = gp.GetNormal();
-                    depthFlag = (gpVector.Z > 0) ? false : true;
+                    if (beam1.Name != "COLUMN")
+                    { depthFlag = (gpVector.Z > 0) ? false : true; }
                 }
                 else
                 {
@@ -837,6 +840,7 @@ namespace Type17_ClipToStiffener
                         double d = Distance.PointToPoint(center2, poliPointA2);
                         poliPointB2 = TeklaPH.Line.FindPointOnLine(center2, p1, (Distance.PointToPoint(center2, mid) > Distance.PointToPoint(p1, mid)) ? d : d * -1);
                         poliPointB1 = Projection.PointToPlane(poliPointB2, pl2);
+                        depthFlag = (gpVector.Z > 0) ? true : false;
                     }
                     else
                     {
@@ -847,9 +851,11 @@ namespace Type17_ClipToStiffener
                         double d = Distance.PointToPoint(center1, poliPointA1);
                         poliPointB1 = TeklaPH.Line.FindPointOnLine(center1, p4, (Distance.PointToPoint(center1, mid) > Distance.PointToPoint(p4, mid)) ? d : d * -1);
                         poliPointB2 = Projection.PointToPlane(poliPointB1, pl1);
+                        depthFlag = (gpVector.Z > 0) ? true : false;
                     }
-                    Vector gpVector = gp.GetNormal();
-                    depthFlag = (gpVector.Z > 0) ? true : false;
+                   
+                    if(beam1.Name != "COLUMN")
+                    { depthFlag = (gpVector.Z > 0) ? true : false; }
                 }
               
 
