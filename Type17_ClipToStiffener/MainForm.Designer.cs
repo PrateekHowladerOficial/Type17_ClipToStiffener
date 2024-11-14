@@ -33,6 +33,8 @@ namespace Type17_ClipToStiffener
             this.OkApplyModifyGetOnOffCancel = new Tekla.Structures.Dialog.UIControls.OkApplyModifyGetOnOffCancel();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.ParametersTabPage = new System.Windows.Forms.TabPage();
+            this.label11 = new System.Windows.Forms.Label();
+            this.textBox6 = new System.Windows.Forms.TextBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.textBox7 = new System.Windows.Forms.TextBox();
@@ -45,10 +47,6 @@ namespace Type17_ClipToStiffener
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -92,18 +90,20 @@ namespace Type17_ClipToStiffener
             this.comboBox7 = new System.Windows.Forms.ComboBox();
             this.comboBox6 = new System.Windows.Forms.ComboBox();
             this.comboBox5 = new System.Windows.Forms.ComboBox();
+            this.saveLoad = new Tekla.Structures.Dialog.UIControls.SaveLoad();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.saveLoad = new Tekla.Structures.Dialog.UIControls.SaveLoad();
-            this.textBox6 = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.tableLayoutPanel.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.ParametersTabPage.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabPage1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.SuspendLayout();
@@ -126,7 +126,7 @@ namespace Type17_ClipToStiffener
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel.Size = new System.Drawing.Size(894, 816);
+            this.tableLayoutPanel.Size = new System.Drawing.Size(766, 717);
             this.tableLayoutPanel.TabIndex = 0;
             // 
             // OkApplyModifyGetOnOffCancel
@@ -135,10 +135,10 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.OkApplyModifyGetOnOffCancel, null);
             this.structuresExtender.SetBindPropertyName(this.OkApplyModifyGetOnOffCancel, null);
             this.OkApplyModifyGetOnOffCancel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.OkApplyModifyGetOnOffCancel.Location = new System.Drawing.Point(5, 775);
+            this.OkApplyModifyGetOnOffCancel.Location = new System.Drawing.Point(5, 676);
             this.OkApplyModifyGetOnOffCancel.Margin = new System.Windows.Forms.Padding(5);
             this.OkApplyModifyGetOnOffCancel.Name = "OkApplyModifyGetOnOffCancel";
-            this.OkApplyModifyGetOnOffCancel.Size = new System.Drawing.Size(884, 36);
+            this.OkApplyModifyGetOnOffCancel.Size = new System.Drawing.Size(756, 36);
             this.OkApplyModifyGetOnOffCancel.TabIndex = 19;
             this.OkApplyModifyGetOnOffCancel.OkClicked += new System.EventHandler(this.OkApplyModifyGetOnOffCancel_OkClicked);
             this.OkApplyModifyGetOnOffCancel.ApplyClicked += new System.EventHandler(this.OkApplyModifyGetOnOffCancel_ApplyClicked);
@@ -159,7 +159,7 @@ namespace Type17_ClipToStiffener
             this.tabControl.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl.Name = "tabControl";
             this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(886, 699);
+            this.tabControl.Size = new System.Drawing.Size(758, 600);
             this.tabControl.TabIndex = 18;
             // 
             // ParametersTabPage
@@ -168,6 +168,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.ParametersTabPage, null);
             this.ParametersTabPage.BackColor = System.Drawing.Color.WhiteSmoke;
             this.structuresExtender.SetBindPropertyName(this.ParametersTabPage, null);
+            this.ParametersTabPage.Controls.Add(this.label3);
             this.ParametersTabPage.Controls.Add(this.label11);
             this.ParametersTabPage.Controls.Add(this.textBox6);
             this.ParametersTabPage.Controls.Add(this.textBox9);
@@ -182,20 +183,40 @@ namespace Type17_ClipToStiffener
             this.ParametersTabPage.Controls.Add(this.label9);
             this.ParametersTabPage.Controls.Add(this.label8);
             this.ParametersTabPage.Controls.Add(this.label6);
-            this.ParametersTabPage.Controls.Add(this.label5);
-            this.ParametersTabPage.Controls.Add(this.label4);
-            this.ParametersTabPage.Controls.Add(this.label3);
             this.ParametersTabPage.Controls.Add(this.pictureBox1);
             this.ParametersTabPage.Controls.Add(this.label2);
             this.ParametersTabPage.Controls.Add(this.label1);
+            this.ParametersTabPage.Controls.Add(this.pictureBox2);
             this.ParametersTabPage.Location = new System.Drawing.Point(4, 25);
             this.ParametersTabPage.Margin = new System.Windows.Forms.Padding(4);
             this.ParametersTabPage.Name = "ParametersTabPage";
             this.ParametersTabPage.Padding = new System.Windows.Forms.Padding(4);
-            this.ParametersTabPage.Size = new System.Drawing.Size(878, 670);
+            this.ParametersTabPage.Size = new System.Drawing.Size(750, 571);
             this.ParametersTabPage.TabIndex = 2;
             this.ParametersTabPage.Text = "Clip to Stiffner";
             this.ParametersTabPage.Click += new System.EventHandler(this.ParametersTabPage_Click);
+            // 
+            // label11
+            // 
+            this.structuresExtender.SetAttributeName(this.label11, null);
+            this.structuresExtender.SetAttributeTypeName(this.label11, null);
+            this.label11.AutoSize = true;
+            this.structuresExtender.SetBindPropertyName(this.label11, null);
+            this.label11.Location = new System.Drawing.Point(640, 376);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(69, 16);
+            this.label11.TabIndex = 21;
+            this.label11.Text = "Clearence";
+            // 
+            // textBox6
+            // 
+            this.structuresExtender.SetAttributeName(this.textBox6, "Clerance");
+            this.structuresExtender.SetAttributeTypeName(this.textBox6, "Distance");
+            this.structuresExtender.SetBindPropertyName(this.textBox6, null);
+            this.textBox6.Location = new System.Drawing.Point(643, 395);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(100, 22);
+            this.textBox6.TabIndex = 20;
             // 
             // textBox9
             // 
@@ -233,7 +254,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox5, "PlateWidth1");
             this.structuresExtender.SetAttributeTypeName(this.textBox5, "Distance");
             this.structuresExtender.SetBindPropertyName(this.textBox5, null);
-            this.textBox5.Location = new System.Drawing.Point(109, 525);
+            this.textBox5.Location = new System.Drawing.Point(51, 500);
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(100, 22);
             this.textBox5.TabIndex = 11;
@@ -244,7 +265,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox4, "PlateHight");
             this.structuresExtender.SetAttributeTypeName(this.textBox4, "Distance");
             this.structuresExtender.SetBindPropertyName(this.textBox4, null);
-            this.textBox4.Location = new System.Drawing.Point(369, 279);
+            this.textBox4.Location = new System.Drawing.Point(311, 254);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(100, 22);
             this.textBox4.TabIndex = 9;
@@ -255,7 +276,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox3, "TopOffset");
             this.structuresExtender.SetAttributeTypeName(this.textBox3, "Distance");
             this.structuresExtender.SetBindPropertyName(this.textBox3, null);
-            this.textBox3.Location = new System.Drawing.Point(16, 279);
+            this.textBox3.Location = new System.Drawing.Point(39, 254);
             this.textBox3.Name = "textBox3";
             this.textBox3.Size = new System.Drawing.Size(100, 22);
             this.textBox3.TabIndex = 7;
@@ -265,7 +286,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox2, "Gap");
             this.structuresExtender.SetAttributeTypeName(this.textBox2, "Distance");
             this.structuresExtender.SetBindPropertyName(this.textBox2, null);
-            this.textBox2.Location = new System.Drawing.Point(257, 234);
+            this.textBox2.Location = new System.Drawing.Point(199, 209);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(100, 22);
             this.textBox2.TabIndex = 5;
@@ -322,58 +343,10 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.label6, null);
             this.label6.AutoSize = true;
             this.structuresExtender.SetBindPropertyName(this.label6, null);
-            this.label6.Location = new System.Drawing.Point(106, 496);
+            this.label6.Location = new System.Drawing.Point(48, 471);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(0, 16);
             this.label6.TabIndex = 10;
-            // 
-            // label5
-            // 
-            this.structuresExtender.SetAttributeName(this.label5, null);
-            this.structuresExtender.SetAttributeTypeName(this.label5, null);
-            this.label5.AutoSize = true;
-            this.structuresExtender.SetBindPropertyName(this.label5, null);
-            this.label5.Location = new System.Drawing.Point(366, 260);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(72, 16);
-            this.label5.TabIndex = 8;
-            this.label5.Text = "Plate Hight";
-            // 
-            // label4
-            // 
-            this.structuresExtender.SetAttributeName(this.label4, null);
-            this.structuresExtender.SetAttributeTypeName(this.label4, null);
-            this.label4.AutoSize = true;
-            this.structuresExtender.SetBindPropertyName(this.label4, null);
-            this.label4.Location = new System.Drawing.Point(13, 250);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(69, 16);
-            this.label4.TabIndex = 6;
-            this.label4.Text = "Top Offset";
-            // 
-            // label3
-            // 
-            this.structuresExtender.SetAttributeName(this.label3, null);
-            this.structuresExtender.SetAttributeTypeName(this.label3, null);
-            this.label3.AutoSize = true;
-            this.structuresExtender.SetBindPropertyName(this.label3, null);
-            this.label3.Location = new System.Drawing.Point(299, 206);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(33, 16);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "Gap";
-            // 
-            // pictureBox1
-            // 
-            this.structuresExtender.SetAttributeName(this.pictureBox1, null);
-            this.structuresExtender.SetAttributeTypeName(this.pictureBox1, null);
-            this.structuresExtender.SetBindPropertyName(this.pictureBox1, null);
-            this.pictureBox1.Image = global::Type17_ClipToStiffener.Properties.Resources.Screenshot_2024_11_05_110626;
-            this.pictureBox1.Location = new System.Drawing.Point(88, 250);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(391, 311);
-            this.pictureBox1.TabIndex = 2;
-            this.pictureBox1.TabStop = false;
             // 
             // label2
             // 
@@ -428,7 +401,7 @@ namespace Type17_ClipToStiffener
             this.tabPage1.Controls.Add(this.pictureBox4);
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(878, 670);
+            this.tabPage1.Size = new System.Drawing.Size(750, 571);
             this.tabPage1.TabIndex = 3;
             this.tabPage1.Text = "Bolt Array";
             // 
@@ -438,7 +411,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.label12, null);
             this.label12.AutoSize = true;
             this.structuresExtender.SetBindPropertyName(this.label12, null);
-            this.label12.Location = new System.Drawing.Point(419, 285);
+            this.label12.Location = new System.Drawing.Point(356, 285);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(133, 16);
             this.label12.TabIndex = 79;
@@ -450,7 +423,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.label7, null);
             this.label7.AutoSize = true;
             this.structuresExtender.SetBindPropertyName(this.label7, null);
-            this.label7.Location = new System.Drawing.Point(238, 285);
+            this.label7.Location = new System.Drawing.Point(181, 285);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(113, 16);
             this.label7.TabIndex = 78;
@@ -462,18 +435,18 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.label26, null);
             this.label26.AutoSize = true;
             this.structuresExtender.SetBindPropertyName(this.label26, null);
-            this.label26.Location = new System.Drawing.Point(630, 381);
+            this.label26.Location = new System.Drawing.Point(338, 479);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(106, 16);
+            this.label26.Size = new System.Drawing.Size(104, 16);
             this.label26.TabIndex = 77;
-            this.label26.Text = "HOrizontal Offset";
+            this.label26.Text = "Horizontal Offset";
             // 
             // textBox23
             // 
             this.structuresExtender.SetAttributeName(this.textBox23, "BA2OffsetY");
             this.structuresExtender.SetAttributeTypeName(this.textBox23, "Distance");
             this.structuresExtender.SetBindPropertyName(this.textBox23, null);
-            this.textBox23.Location = new System.Drawing.Point(633, 400);
+            this.textBox23.Location = new System.Drawing.Point(341, 498);
             this.textBox23.Name = "textBox23";
             this.textBox23.Size = new System.Drawing.Size(84, 22);
             this.textBox23.TabIndex = 76;
@@ -483,7 +456,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox24, "BA2OffsetX");
             this.structuresExtender.SetAttributeTypeName(this.textBox24, "Distance");
             this.structuresExtender.SetBindPropertyName(this.textBox24, null);
-            this.textBox24.Location = new System.Drawing.Point(633, 356);
+            this.textBox24.Location = new System.Drawing.Point(408, 340);
             this.textBox24.Name = "textBox24";
             this.textBox24.Size = new System.Drawing.Size(84, 22);
             this.textBox24.TabIndex = 74;
@@ -493,7 +466,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox22, "BA1OffsetY");
             this.structuresExtender.SetAttributeTypeName(this.textBox22, "Distance");
             this.structuresExtender.SetBindPropertyName(this.textBox22, null);
-            this.textBox22.Location = new System.Drawing.Point(55, 400);
+            this.textBox22.Location = new System.Drawing.Point(195, 498);
             this.textBox22.Name = "textBox22";
             this.textBox22.Size = new System.Drawing.Size(84, 22);
             this.textBox22.TabIndex = 72;
@@ -503,7 +476,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox21, "BA1OffsetX");
             this.structuresExtender.SetAttributeTypeName(this.textBox21, "Distance");
             this.structuresExtender.SetBindPropertyName(this.textBox21, null);
-            this.textBox21.Location = new System.Drawing.Point(55, 356);
+            this.textBox21.Location = new System.Drawing.Point(115, 340);
             this.textBox21.Name = "textBox21";
             this.textBox21.Size = new System.Drawing.Size(84, 22);
             this.textBox21.TabIndex = 70;
@@ -513,7 +486,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox17, "BA2xCount");
             this.structuresExtender.SetAttributeTypeName(this.textBox17, "Integer");
             this.structuresExtender.SetBindPropertyName(this.textBox17, null);
-            this.textBox17.Location = new System.Drawing.Point(573, 470);
+            this.textBox17.Location = new System.Drawing.Point(408, 368);
             this.textBox17.Name = "textBox17";
             this.textBox17.Size = new System.Drawing.Size(25, 22);
             this.textBox17.TabIndex = 69;
@@ -523,7 +496,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox18, "BA2xText");
             this.structuresExtender.SetAttributeTypeName(this.textBox18, "DistanceList");
             this.structuresExtender.SetBindPropertyName(this.textBox18, null);
-            this.textBox18.Location = new System.Drawing.Point(607, 470);
+            this.textBox18.Location = new System.Drawing.Point(442, 368);
             this.textBox18.Name = "textBox18";
             this.textBox18.Size = new System.Drawing.Size(110, 22);
             this.textBox18.TabIndex = 68;
@@ -533,7 +506,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox15, "BA2yCount");
             this.structuresExtender.SetAttributeTypeName(this.textBox15, "Integer");
             this.structuresExtender.SetBindPropertyName(this.textBox15, null);
-            this.textBox15.Location = new System.Drawing.Point(430, 626);
+            this.textBox15.Location = new System.Drawing.Point(341, 526);
             this.textBox15.Name = "textBox15";
             this.textBox15.Size = new System.Drawing.Size(25, 22);
             this.textBox15.TabIndex = 67;
@@ -543,7 +516,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox16, "BA2yText");
             this.structuresExtender.SetAttributeTypeName(this.textBox16, "DistanceList");
             this.structuresExtender.SetBindPropertyName(this.textBox16, null);
-            this.textBox16.Location = new System.Drawing.Point(464, 626);
+            this.textBox16.Location = new System.Drawing.Point(375, 526);
             this.textBox16.Name = "textBox16";
             this.textBox16.Size = new System.Drawing.Size(110, 22);
             this.textBox16.TabIndex = 66;
@@ -553,7 +526,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox19, "BA1xCount");
             this.structuresExtender.SetAttributeTypeName(this.textBox19, "Integer");
             this.structuresExtender.SetBindPropertyName(this.textBox19, null);
-            this.textBox19.Location = new System.Drawing.Point(88, 470);
+            this.textBox19.Location = new System.Drawing.Point(55, 368);
             this.textBox19.Name = "textBox19";
             this.textBox19.Size = new System.Drawing.Size(25, 22);
             this.textBox19.TabIndex = 65;
@@ -563,7 +536,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox20, "BA1xText");
             this.structuresExtender.SetAttributeTypeName(this.textBox20, "DistanceList");
             this.structuresExtender.SetBindPropertyName(this.textBox20, null);
-            this.textBox20.Location = new System.Drawing.Point(122, 470);
+            this.textBox20.Location = new System.Drawing.Point(89, 368);
             this.textBox20.Name = "textBox20";
             this.textBox20.Size = new System.Drawing.Size(110, 22);
             this.textBox20.TabIndex = 64;
@@ -574,7 +547,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox14, "BA1yCount");
             this.structuresExtender.SetAttributeTypeName(this.textBox14, "Integer");
             this.structuresExtender.SetBindPropertyName(this.textBox14, null);
-            this.textBox14.Location = new System.Drawing.Point(207, 626);
+            this.textBox14.Location = new System.Drawing.Point(135, 526);
             this.textBox14.Name = "textBox14";
             this.textBox14.Size = new System.Drawing.Size(25, 22);
             this.textBox14.TabIndex = 59;
@@ -584,7 +557,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeName(this.textBox13, "BA1yText");
             this.structuresExtender.SetAttributeTypeName(this.textBox13, "DistanceList");
             this.structuresExtender.SetBindPropertyName(this.textBox13, null);
-            this.textBox13.Location = new System.Drawing.Point(241, 626);
+            this.textBox13.Location = new System.Drawing.Point(169, 526);
             this.textBox13.Name = "textBox13";
             this.textBox13.Size = new System.Drawing.Size(110, 22);
             this.textBox13.TabIndex = 58;
@@ -595,7 +568,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.label27, null);
             this.label27.AutoSize = true;
             this.structuresExtender.SetBindPropertyName(this.label27, null);
-            this.label27.Location = new System.Drawing.Point(630, 337);
+            this.label27.Location = new System.Drawing.Point(405, 321);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(72, 16);
             this.label27.TabIndex = 75;
@@ -607,7 +580,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.label25, null);
             this.label25.AutoSize = true;
             this.structuresExtender.SetBindPropertyName(this.label25, null);
-            this.label25.Location = new System.Drawing.Point(52, 381);
+            this.label25.Location = new System.Drawing.Point(192, 479);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(104, 16);
             this.label25.TabIndex = 73;
@@ -619,7 +592,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.label24, null);
             this.label24.AutoSize = true;
             this.structuresExtender.SetBindPropertyName(this.label24, null);
-            this.label24.Location = new System.Drawing.Point(52, 337);
+            this.label24.Location = new System.Drawing.Point(112, 321);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(67, 16);
             this.label24.TabIndex = 71;
@@ -923,6 +896,48 @@ namespace Type17_ClipToStiffener
             this.comboBox5.TabIndex = 57;
             this.comboBox5.Text = "Bolt";
             // 
+            // saveLoad
+            // 
+            this.structuresExtender.SetAttributeName(this.saveLoad, null);
+            this.structuresExtender.SetAttributeTypeName(this.saveLoad, null);
+            this.saveLoad.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.structuresExtender.SetBindPropertyName(this.saveLoad, null);
+            this.saveLoad.Dock = System.Windows.Forms.DockStyle.Top;
+            this.saveLoad.HelpFileType = Tekla.Structures.Dialog.UIControls.SaveLoad.HelpFileTypeEnum.General;
+            this.saveLoad.HelpKeyword = "";
+            this.saveLoad.HelpUrl = "";
+            this.saveLoad.Location = new System.Drawing.Point(5, 5);
+            this.saveLoad.Margin = new System.Windows.Forms.Padding(5);
+            this.saveLoad.Name = "saveLoad";
+            this.saveLoad.SaveAsText = "";
+            this.saveLoad.Size = new System.Drawing.Size(756, 53);
+            this.saveLoad.TabIndex = 0;
+            this.saveLoad.UserDefinedHelpFilePath = null;
+            // 
+            // pictureBox2
+            // 
+            this.structuresExtender.SetAttributeName(this.pictureBox2, null);
+            this.structuresExtender.SetAttributeTypeName(this.pictureBox2, null);
+            this.pictureBox2.BackgroundImage = global::Type17_ClipToStiffener.Properties.Resources.Screenshot_2024_11_14_180223;
+            this.structuresExtender.SetBindPropertyName(this.pictureBox2, null);
+            this.pictureBox2.Location = new System.Drawing.Point(499, 308);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(220, 184);
+            this.pictureBox2.TabIndex = 22;
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            this.structuresExtender.SetAttributeName(this.pictureBox1, null);
+            this.structuresExtender.SetAttributeTypeName(this.pictureBox1, null);
+            this.structuresExtender.SetBindPropertyName(this.pictureBox1, null);
+            this.pictureBox1.Image = global::Type17_ClipToStiffener.Properties.Resources.Screenshot_2024_11_05_110626;
+            this.pictureBox1.Location = new System.Drawing.Point(30, 225);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(391, 311);
+            this.pictureBox1.TabIndex = 2;
+            this.pictureBox1.TabStop = false;
+            // 
             // pictureBox3
             // 
             this.structuresExtender.SetAttributeName(this.pictureBox3, null);
@@ -939,53 +954,25 @@ namespace Type17_ClipToStiffener
             // 
             this.structuresExtender.SetAttributeName(this.pictureBox4, null);
             this.structuresExtender.SetAttributeTypeName(this.pictureBox4, null);
-            this.pictureBox4.BackgroundImage = global::Type17_ClipToStiffener.Properties.Resources.Screenshot_2024_11_05_114855;
+            this.pictureBox4.BackgroundImage = global::Type17_ClipToStiffener.Properties.Resources.Screenshot_2024_11_14_174639;
             this.structuresExtender.SetBindPropertyName(this.pictureBox4, null);
             this.pictureBox4.Location = new System.Drawing.Point(205, 304);
             this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(405, 344);
+            this.pictureBox4.Size = new System.Drawing.Size(210, 188);
             this.pictureBox4.TabIndex = 57;
             this.pictureBox4.TabStop = false;
             // 
-            // saveLoad
+            // label3
             // 
-            this.structuresExtender.SetAttributeName(this.saveLoad, null);
-            this.structuresExtender.SetAttributeTypeName(this.saveLoad, null);
-            this.saveLoad.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.structuresExtender.SetBindPropertyName(this.saveLoad, null);
-            this.saveLoad.Dock = System.Windows.Forms.DockStyle.Top;
-            this.saveLoad.HelpFileType = Tekla.Structures.Dialog.UIControls.SaveLoad.HelpFileTypeEnum.General;
-            this.saveLoad.HelpKeyword = "";
-            this.saveLoad.HelpUrl = "";
-            this.saveLoad.Location = new System.Drawing.Point(5, 5);
-            this.saveLoad.Margin = new System.Windows.Forms.Padding(5);
-            this.saveLoad.Name = "saveLoad";
-            this.saveLoad.SaveAsText = "";
-            this.saveLoad.Size = new System.Drawing.Size(884, 53);
-            this.saveLoad.TabIndex = 0;
-            this.saveLoad.UserDefinedHelpFilePath = null;
-            // 
-            // textBox6
-            // 
-            this.structuresExtender.SetAttributeName(this.textBox6, "Clerance");
-            this.structuresExtender.SetAttributeTypeName(this.textBox6, "Distance");
-            this.structuresExtender.SetBindPropertyName(this.textBox6, null);
-            this.textBox6.Location = new System.Drawing.Point(674, 263);
-            this.textBox6.Name = "textBox6";
-            this.textBox6.Size = new System.Drawing.Size(100, 22);
-            this.textBox6.TabIndex = 20;
-            // 
-            // label11
-            // 
-            this.structuresExtender.SetAttributeName(this.label11, null);
-            this.structuresExtender.SetAttributeTypeName(this.label11, null);
-            this.label11.AutoSize = true;
-            this.structuresExtender.SetBindPropertyName(this.label11, null);
-            this.label11.Location = new System.Drawing.Point(671, 234);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(69, 16);
-            this.label11.TabIndex = 21;
-            this.label11.Text = "Clearence";
+            this.structuresExtender.SetAttributeName(this.label3, null);
+            this.structuresExtender.SetAttributeTypeName(this.label3, null);
+            this.label3.AutoSize = true;
+            this.structuresExtender.SetBindPropertyName(this.label3, null);
+            this.label3.Location = new System.Drawing.Point(508, 276);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(143, 16);
+            this.label3.TabIndex = 23;
+            this.label3.Text = "For column Connection";
             // 
             // MainForm
             // 
@@ -994,12 +981,12 @@ namespace Type17_ClipToStiffener
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.structuresExtender.SetBindPropertyName(this, null);
-            this.ClientSize = new System.Drawing.Size(894, 816);
+            this.ClientSize = new System.Drawing.Size(766, 717);
             this.Controls.Add(this.tableLayoutPanel);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.MaximumSize = new System.Drawing.Size(912, 863);
-            this.MinimumSize = new System.Drawing.Size(912, 863);
+            this.MaximumSize = new System.Drawing.Size(784, 764);
+            this.MinimumSize = new System.Drawing.Size(784, 764);
             this.Name = "MainForm";
             this.Text = "Clip to Stiffener";
             this.Load += new System.EventHandler(this.MainForm_Load);
@@ -1007,13 +994,14 @@ namespace Type17_ClipToStiffener
             this.tabControl.ResumeLayout(false);
             this.ParametersTabPage.ResumeLayout(false);
             this.ParametersTabPage.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.ResumeLayout(false);
@@ -1039,9 +1027,6 @@ namespace Type17_ClipToStiffener
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
@@ -1090,5 +1075,7 @@ namespace Type17_ClipToStiffener
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.Label label3;
     }
 }

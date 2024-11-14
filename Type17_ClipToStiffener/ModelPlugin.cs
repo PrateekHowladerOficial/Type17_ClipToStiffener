@@ -272,12 +272,12 @@ namespace Type17_ClipToStiffener
                 ContourPlate cp = ContourFitPart(beam1, beam2, _Gap, _Material);
                 
                 bool positionFlag  = (_PlatePosition != 0)? true : false;
-
-                ArrayList poliplates = polibeamPlate(beam1,beam2,cp,_Gap,_PlateWidth1,_PlateWidth2,_PlateHight,_Thickness,_TopOffset,_Material, positionFlag);
+                ArrayList list = new ArrayList();
+                ArrayList poliplates = polibeamPlate(beam1,beam2,cp,_Gap,_PlateWidth1,_PlateWidth2,_PlateHight,_Thickness,_TopOffset,_Material, positionFlag,out list);
                 if (beam1.Name != "COLUMN")
-                    BoltArrayForBeam(beam1, cp, beam2, poliplates[0] as Part, poliplates[1] as Part);
+                    BoltArrayForBeam(beam1, cp, beam2, poliplates[0] as Part, poliplates[1] as Part,list);
                 else
-                    BoltArrayForColumn(beam1, cp, beam2, poliplates[0] as Part, poliplates[1] as Part);
+                    BoltArrayForColumn(beam1, cp, beam2, poliplates[0] as Part, poliplates[1] as Part,list);
 
                 Weld Weld = new Weld();
                 Weld.MainObject = beam1;
@@ -459,12 +459,12 @@ namespace Type17_ClipToStiffener
             if(IsDefaultValue(_BA1OffsetX))
                 { _BA1OffsetX = double.MinValue; }
             if(IsDefaultValue(_BA1OffsetY))
-                { _BA1OffsetY = 0; }
+                { _BA1OffsetY = double.MinValue; }
             if (IsDefaultValue(_BA2OffsetX))
                 { _BA2OffsetX = double.MinValue; }
             if( IsDefaultValue(_BA2OffsetY))
             {
-                _BA2OffsetY = 0;
+                _BA2OffsetY = double.MinValue;
             }
             if (IsDefaultValue(_PlatePosition))
                 _PlatePosition = 0;
@@ -725,7 +725,7 @@ namespace Type17_ClipToStiffener
             }
             return cp1;
         }
-        private ArrayList polibeamPlate(Beam beam1, Beam beam2, ContourPlate cp,double gap ,double webGap, double width2, double hight, double thickness, double topOffset, string material,bool position )
+        private ArrayList polibeamPlate(Beam beam1, Beam beam2, ContourPlate cp,double gap ,double webGap, double width2, double hight, double thickness, double topOffset, string material,bool position , out ArrayList list )
         {
             Faces Faces = new Faces();
             TeklaPH.Line _Line = new TeklaPH.Line();
@@ -747,7 +747,7 @@ namespace Type17_ClipToStiffener
             ArrayList beam1_centerLine = beam1.GetCenterLine(false);
             ArrayList beam2_centerLine = beam2.GetCenterLine(false);
              Faces.Face_ face = null;
-            bool depthFlag = true;
+          
             Point mid = MidPoint(beam2_centerLine[0] as Point, beam2_centerLine[1] as Point);
             GeometricPlane gp = new GeometricPlane();
             if (Distance.PointToPlane(mid, Faces.ConvertFaceToGeometricPlane(beam1_faces[0].Face)) < Distance.PointToPlane(mid, Faces.ConvertFaceToGeometricPlane(beam1_faces[10].Face)))
@@ -812,7 +812,6 @@ namespace Type17_ClipToStiffener
                         double d = Distance.PointToPoint(center2, poliPointA2);
                         poliPointB2 = TeklaPH.Line.FindPointOnLine(center2, p2, (Distance.PointToPoint(center2, mid) > Distance.PointToPoint(p2, mid)) ? d : d * -1);
                         poliPointB1 = Projection.PointToPlane(poliPointB2, pl1);
-                        depthFlag = (gpVector.Z > 0) ? false : true;
                     }
                     else
                     {
@@ -823,10 +822,7 @@ namespace Type17_ClipToStiffener
                         double d = Distance.PointToPoint(center1, poliPointA1);
                         poliPointB1 = TeklaPH.Line.FindPointOnLine(center1, p3, (Distance.PointToPoint(center1, mid) > Distance.PointToPoint(p3, mid)) ? d : d * -1);
                         poliPointB2 = Projection.PointToPlane(poliPointB1, pl2);
-                        depthFlag = (gpVector.Z > 0) ? true : false;
                     }
-                    if (beam1.Name != "COLUMN")
-                    { depthFlag = (gpVector.Z > 0) ? false : true; }
                 }
                 else
                 {
@@ -840,7 +836,6 @@ namespace Type17_ClipToStiffener
                         double d = Distance.PointToPoint(center2, poliPointA2);
                         poliPointB2 = TeklaPH.Line.FindPointOnLine(center2, p1, (Distance.PointToPoint(center2, mid) > Distance.PointToPoint(p1, mid)) ? d : d * -1);
                         poliPointB1 = Projection.PointToPlane(poliPointB2, pl2);
-                        depthFlag = (gpVector.Z > 0) ? true : false;
                     }
                     else
                     {
@@ -851,11 +846,9 @@ namespace Type17_ClipToStiffener
                         double d = Distance.PointToPoint(center1, poliPointA1);
                         poliPointB1 = TeklaPH.Line.FindPointOnLine(center1, p4, (Distance.PointToPoint(center1, mid) > Distance.PointToPoint(p4, mid)) ? d : d * -1);
                         poliPointB2 = Projection.PointToPlane(poliPointB1, pl1);
-                        depthFlag = (gpVector.Z > 0) ? true : false;
                     }
                    
-                    if(beam1.Name != "COLUMN")
-                    { depthFlag = (gpVector.Z > 0) ? true : false; }
+                    
                 }
               
 
@@ -889,19 +882,24 @@ namespace Type17_ClipToStiffener
                     g2 = new GeometricPlane(po, beam1_faces[13].Vector);
                 ArrayList countourPoints = new ArrayList();
 
+                bool debthFlag = DebthChecker(beam1, beam2, center1, center2);
+                ArrayList list1 = new ArrayList();
+                
                 Vector vector2 = face.Vector;
                 foreach (Point p in new List<Point> {poliPointA1 , center1 ,poliPointB1 })
                 {
                     Point hold = p;
                     if(_TopOffset != -1 || beam1.Name == "COLUMN")
                         hold = Projection.PointToPlane(p,(beam1.Name != "COLUMN") ? g1:g2 );
+                    list1.Add(hold);
                     ContourPoint contourPoint = new ContourPoint(hold, new Chamfer());
                     countourPoints.Add(contourPoint);
                 }
+                list = list1;
                 PolyBeam pb = new PolyBeam();
                 pb.Contour.ContourPoints = countourPoints;
                 pb.Profile.ProfileString = "PLT"+thickness+"*"+hight;
-                pb.Position.Depth = ( beam1.Name != "COLUMN")? Position.DepthEnum.FRONT : Position.DepthEnum.MIDDLE;
+                pb.Position.Depth = ( beam1.Name != "COLUMN")? ((debthFlag)?Position.DepthEnum.FRONT: Position.DepthEnum.BEHIND) : Position.DepthEnum.MIDDLE;
                 pb.Position.PlaneOffset = 0;
                 pb.Position.Plane = (beam1.Name != "COLUMN")? Position.PlaneEnum.MIDDLE :(vector2.Z == 1)? Position.PlaneEnum.LEFT : Position.PlaneEnum.RIGHT;
                 pb.Position.Rotation =  (beam1.Name != "COLUMN")? Position.RotationEnum.FRONT : Position.RotationEnum.TOP;
@@ -920,7 +918,7 @@ namespace Type17_ClipToStiffener
                 PolyBeam pb1 = new PolyBeam();
                 pb1.Contour.ContourPoints = countourPoints;
                 pb1.Profile.ProfileString = "PLT" + thickness + "*" + hight;
-                pb1.Position.Depth =(beam1.Name != "COLUMN") ? Position.DepthEnum.BEHIND : Position.DepthEnum.MIDDLE;
+                pb1.Position.Depth =(beam1.Name != "COLUMN") ? ((debthFlag) ? Position.DepthEnum.BEHIND : Position.DepthEnum.FRONT) : Position.DepthEnum.MIDDLE;
                 pb1.Position.PlaneOffset = 0;
                 pb1.Position.Plane = (beam1.Name != "COLUMN") ? Position.PlaneEnum.MIDDLE : (vector2.Z == 1) ? Position.PlaneEnum.RIGHT: Position.PlaneEnum.LEFT;
                 pb1.Position.Rotation = (beam1.Name != "COLUMN") ? Position.RotationEnum.FRONT : Position.RotationEnum.TOP;
@@ -930,9 +928,12 @@ namespace Type17_ClipToStiffener
                 countourPoints.Clear();
                
                 return new ArrayList {pb , pb1 };
-                
             }
-            else { return null; }
+            else
+            {
+                list = null;
+                return null; 
+            }
             //else
             //{
               
@@ -989,7 +990,7 @@ namespace Type17_ClipToStiffener
             //}
 
         }
-        private void BoltArrayForBeam(Part beam1,Part part1, Part part2, Part cp1, Part cp2)
+        private void BoltArrayForBeam(Part beam1,Part part1, Part part2, Part cp1, Part cp2, ArrayList list1)
         {
             Faces _Faces = new Faces();
             TeklaPH.Line _Line = new TeklaPH.Line();
@@ -1109,20 +1110,26 @@ namespace Type17_ClipToStiffener
                     }
                 }
 
-                bA.StartPointOffset.Dz = _BA1OffsetY;
-                bA.EndPointOffset.Dz = _BA1OffsetY;
+                bA.StartPointOffset.Dz =0;
+                bA.EndPointOffset.Dz = 0;
 
                 List<Faces.Face_> face_s = Faces.Get_faces(beam1, true);
                 Point refference = MidPoint(points[3] as Point, points[2] as Point);
-                refference = Projection.PointToPlane(refference, Faces.ConvertFaceToGeometricPlane(face_s[5].Face));
+                refference = Projection.PointToPlane(refference, Faces.ConvertFaceToGeometricPlane(face_s[11].Face));
                 Point point1 = Projection.PointToPlane(refference, geometricPlane),
                     point2 = TeklaPH.Line.FindPointOnLine(Projection.PointToPlane(cpMid, geometricPlane), point1, total / 2 * -1);
-                
-                Point point = Projection.PointToPlane(point2, Faces.ConvertFaceToGeometricPlane(face_s[5].Face));
 
-                bA.SecondPosition = point1;
+                Point point = Projection.PointToPlane(point2, Faces.ConvertFaceToGeometricPlane(face_s[5].Face)),
+                    p1 = point1,
+                    p2 = (_BA1OffsetX == double.MinValue) ? point2 : TeklaPH.Line.FindPointOnLine(point, point2, _BA1OffsetX);
+               
+                Line line = new Line(list1[1] as Point, list1[0] as Point);
+                Point p = (list1[1] as Point) + _BA1OffsetY*line.Direction.GetNormal();
+                GeometricPlane gp = new GeometricPlane(p, line.Direction.GetNormal());
+
+                bA.SecondPosition = (_BA1OffsetY != double.MinValue)? Projection.PointToPlane(p1,gp) : p1;
                 
-                bA.FirstPosition =(_BA1OffsetX == double.MinValue)? point2 : TeklaPH.Line.FindPointOnLine(point,point2,_BA1OffsetX);
+                bA.FirstPosition = (_BA1OffsetY != double.MinValue) ? Projection.PointToPlane(p2, gp) : p2; ;
                 bA.Insert();
 
 
@@ -1226,8 +1233,8 @@ namespace Type17_ClipToStiffener
                 }
 
 
-                bA1.StartPointOffset.Dy = _BA2OffsetY;
-                bA1.EndPointOffset.Dy = _BA2OffsetY;
+                bA1.StartPointOffset.Dy = 0;
+                bA1.EndPointOffset.Dy = 0;
 
                 ArrayList list =Faces.Get_Points(face_.Face);
                 Point point_refference = new Point();
@@ -1239,20 +1246,29 @@ namespace Type17_ClipToStiffener
                     point_refference = MidPoint(list[0] as Point, list[1] as Point);
                 Point mid = MidPoint(list[0] as Point, list[2] as Point);
 
-                point_refference = Projection.PointToPlane(point_refference, Faces.ConvertFaceToGeometricPlane(face_s[5].Face));
+                point_refference = Projection.PointToPlane(point_refference, Faces.ConvertFaceToGeometricPlane(face_s[11].Face));
                 
 
                 myModel.GetWorkPlaneHandler().SetCurrentTransformationPlane(part2Plane);
                 
                 Point lPoint1 = part2Plane.TransformationMatrixToLocal.Transform(currentPlane.TransformationMatrixToGlobal.Transform(TeklaPH.Line.FindPointOnLine(mid, point_refference, total / 2 * -1)));
                 Point lPoint2 = part2Plane.TransformationMatrixToLocal.Transform(currentPlane.TransformationMatrixToGlobal.Transform(point_refference));
+                Point po1 = part2Plane.TransformationMatrixToLocal.Transform(currentPlane.TransformationMatrixToGlobal.Transform(list1[1] as Point)),
+                    po2 = part2Plane.TransformationMatrixToLocal.Transform(currentPlane.TransformationMatrixToGlobal.Transform(list1[2] as Point));
+                line = new Line(po1,po2);
+                 p = (po1) + _BA2OffsetY * line.Direction.GetNormal();
+                 gp = new GeometricPlane(p, line.Direction.GetNormal());
 
-                List<Faces.Face_> faces = Faces.Get_faces(part2,true);
+                List<Faces.Face_> faces = Faces.Get_faces(beam1,true);
                 point = Intersection.LineToPlane(new Line(lPoint1,lPoint2), Faces.ConvertFaceToGeometricPlane(faces[5].Face));
-
-                bA1.FirstPosition =(_BA2OffsetX == double.MinValue)? lPoint1 : TeklaPH.Line.FindPointOnLine(point,lPoint1,_BA2OffsetX);
-                bA1.SecondPosition = lPoint2;
                 
+                p1 = (_BA2OffsetX == double.MinValue) ? lPoint1 : TeklaPH.Line.FindPointOnLine(point, lPoint1, _BA2OffsetX);
+                p2  = lPoint2;
+
+                bA1.FirstPosition = (_BA2OffsetY != double.MinValue) ? Projection.PointToPlane(p1, gp) : p1;
+                bA1.SecondPosition = (_BA2OffsetY != double.MinValue) ? Projection.PointToPlane(p2, gp) : p2;
+
+
 
 
                 flag = bA1.Insert();
@@ -1268,7 +1284,7 @@ namespace Type17_ClipToStiffener
             }
         }
 
-        private void BoltArrayForColumn(Part beam1, Part part1, Part part2, Part cp1, Part cp2)
+        private void BoltArrayForColumn(Part beam1, Part part1, Part part2, Part cp1, Part cp2, ArrayList list1)
         {
             Faces _Faces = new Faces();
             TeklaPH.Line _Line = new TeklaPH.Line();
@@ -1388,8 +1404,8 @@ namespace Type17_ClipToStiffener
                     }
                 }
 
-                bA.StartPointOffset.Dz = _BA1OffsetY;
-                bA.EndPointOffset.Dz = _BA1OffsetY;
+                bA.StartPointOffset.Dz = 0;
+                bA.EndPointOffset.Dz = 0;
                 List<Faces.Face_> face_s = Faces.Get_faces(beam1, true);
                 Point refference = MidPoint(points[0] as Point, points[3] as Point);
                 GeometricPlane gp = new GeometricPlane(refference - face_s[12].Vector * _Thickness, face_s[12].Vector);
@@ -1397,11 +1413,17 @@ namespace Type17_ClipToStiffener
                 Point point1 = Projection.PointToPlane(refference, geometricPlane),
                     point2 = TeklaPH.Line.FindPointOnLine(Projection.PointToPlane(cpMid, geometricPlane), point1, total / 2 * -1);
                
-                Point point = Projection.PointToPlane(point2, new GeometricPlane((points[0] as Point +( _Thickness * face_s[12].Vector)), face_s[13].Vector));
+                Point point = Projection.PointToPlane(point2, new GeometricPlane((points[1] as Point +( _Thickness * face_s[12].Vector)), face_s[13].Vector)),
+                    p1 = point1,
+                    p2 = (_BA1OffsetX == double.MinValue) ? point2 : TeklaPH.Line.FindPointOnLine(point, point2, _BA1OffsetX);
+                
+                Line line = new Line(list1[1] as Point, list1[0] as Point);
+                Point p = (list1[1] as Point) + _BA1OffsetY * line.Direction.GetNormal();
+                GeometricPlane gp1 = new GeometricPlane(p, line.Direction.GetNormal());
 
-                bA.SecondPosition = point1;
+                bA.SecondPosition = (_BA1OffsetY != double.MinValue) ? Projection.PointToPlane(p1, gp1) : p1;
 
-                bA.FirstPosition = (_BA1OffsetX == double.MinValue) ? point2 : TeklaPH.Line.FindPointOnLine(point, point2, _BA1OffsetX);
+                bA.FirstPosition = (_BA1OffsetY != double.MinValue) ? Projection.PointToPlane(p2, gp1) : p2; ;
                 bA.Insert();
 
 
@@ -1505,8 +1527,8 @@ namespace Type17_ClipToStiffener
                 }
 
 
-                bA1.StartPointOffset.Dy = _BA2OffsetY;
-                bA1.EndPointOffset.Dy = _BA2OffsetY;
+                bA1.StartPointOffset.Dy = 0;
+                bA1.EndPointOffset.Dy = 0;
 
                 ArrayList list = Faces.Get_Points(face_.Face);
                 Point point_refference = new Point();
@@ -1519,18 +1541,25 @@ namespace Type17_ClipToStiffener
                 Point mid = MidPoint(list[0] as Point, list[2] as Point);
 
                 point_refference = Projection.PointToPlane(point_refference, gp);
-
-
+                gp = new GeometricPlane(point, face_s[13].Vector);
+                point = Projection.PointToPlane(point_refference,gp);
                 myModel.GetWorkPlaneHandler().SetCurrentTransformationPlane(part2Plane);
 
                 Point lPoint1 = part2Plane.TransformationMatrixToLocal.Transform(currentPlane.TransformationMatrixToGlobal.Transform(TeklaPH.Line.FindPointOnLine(mid, point_refference, total / 2 * -1)));
                 Point lPoint2 = part2Plane.TransformationMatrixToLocal.Transform(currentPlane.TransformationMatrixToGlobal.Transform(point_refference));
 
-                List<Faces.Face_> faces = Faces.Get_faces(part2, true);
-                point = Intersection.LineToPlane(new Line(lPoint1, lPoint2), Faces.ConvertFaceToGeometricPlane(faces[5].Face));
+                Point po1 = part2Plane.TransformationMatrixToLocal.Transform(currentPlane.TransformationMatrixToGlobal.Transform(list1[1] as Point)),
+                   po2 = part2Plane.TransformationMatrixToLocal.Transform(currentPlane.TransformationMatrixToGlobal.Transform(list1[2] as Point));
+                point = part2Plane.TransformationMatrixToLocal.Transform(currentPlane.TransformationMatrixToGlobal.Transform(point));
+                
+                line = new Line(po1, po2);
+                p = (po1) + _BA2OffsetY * line.Direction.GetNormal();
+                gp = new GeometricPlane(p, line.Direction.GetNormal());
+                p1 = (_BA2OffsetX == double.MinValue) ? lPoint1 : TeklaPH.Line.FindPointOnLine(point, lPoint1, _BA2OffsetX);
+                p2 = lPoint2;
 
-                bA1.FirstPosition = (_BA2OffsetX == double.MinValue) ? lPoint1 : TeklaPH.Line.FindPointOnLine(point, lPoint1, _BA2OffsetX);
-                bA1.SecondPosition = lPoint2;
+                bA1.FirstPosition = (_BA2OffsetY != double.MinValue) ? Projection.PointToPlane(p1, gp) : p1;
+                bA1.SecondPosition = (_BA2OffsetY != double.MinValue) ? Projection.PointToPlane(p2, gp) : p2;
 
 
 
@@ -1547,7 +1576,7 @@ namespace Type17_ClipToStiffener
             }
         }
 
-        private Point MidPoint(Point point, Point point1)
+        private static Point MidPoint(Point point, Point point1)
         {
             Point mid = new Point((point.X + point1.X) / 2, (point.Y + point1.Y) / 2, (point.Z + point1.Z) / 2);
             return mid;
@@ -1597,6 +1626,48 @@ namespace Type17_ClipToStiffener
             return Math.Abs(pointVector.Dot(normal)) < 1e-6; // Small tolerance for floating point precision
         }
         
+        private static bool DebthChecker(Part beam1 ,Part beam2 , Point center1 , Point center2 )
+        {
+            Faces Faces = new Faces();
+            List<Faces.Face_> beam1_faces = Faces.Get_faces(beam1, true);
+            ArrayList beam1_centerLine = beam1.GetCenterLine(false);
+            ArrayList beam2_centerLine = beam2.GetCenterLine(false);
+            GeometricPlane gp;
+            Point mid = MidPoint(beam2_centerLine[0] as Point, beam2_centerLine[1] as Point);
+            bool flag = true;
+            if (Distance.PointToPlane(mid, Faces.ConvertFaceToGeometricPlane(beam1_faces[0].Face)) < Distance.PointToPlane(mid, Faces.ConvertFaceToGeometricPlane(beam1_faces[10].Face)))
+            {
+                gp = Faces.ConvertFaceToGeometricPlane(beam1_faces[2].Face);
+                flag = false;
+            }
+            else
+            {
+                 gp = Faces.ConvertFaceToGeometricPlane(beam1_faces[8].Face);
+                flag |= false;
+            }
+            Point p1 = Projection.PointToPlane(center1, gp),
+                p2 = Projection.PointToPlane(center2, gp),
+                p3 = Projection.PointToPlane(beam1_centerLine[0] as Point, gp);
+            if (flag)
+            {
+                if (Distance.PointToPoint(p1, p3) < Distance.PointToPoint(p2, p3))
+                {
+                    return true;
+                }
+                else 
+                    return false;
+            }
+            else
+            {
+                if (Distance.PointToPoint(p1, p3) < Distance.PointToPoint(p2, p3))
+                {
+                    return false;
+                }
+                else
+                    return true;
+            }
+         
+        }
        
         #endregion
     }
