@@ -133,8 +133,11 @@ namespace Type17_ClipToStiffener
         [StructuresField("PlatePosition")]
         public int PlatePosition;
 
-        [StructuresField("Clerance")]
-        public double Clerance;
+        [StructuresField("CleranceTop")]
+        public double CleranceTop;
+
+        [StructuresField("CleranceBottom")]
+        public double CleranceBottom;
         #endregion
     }
 
@@ -182,7 +185,8 @@ namespace Type17_ClipToStiffener
         private double _BA2OffsetY;
         private int _PlatePosition;
 
-        private double _Clerance;
+        private double _CleranceTop;
+        private double _CleranceBottom;
 
         private List<string> _BoltStandardEnum = new List<string>
         {
@@ -342,7 +346,8 @@ namespace Type17_ClipToStiffener
             _BA2OffsetX = Data.BA2OffsetX;
             _BA2OffsetY = Data.BA2OffsetY;
 
-            _Clerance = Data.Clerance;
+            _CleranceTop = Data.CleranceTop;
+            _CleranceBottom = Data.CleranceBottom;
 
             _PlatePosition = Data.PlatePosition;
 
@@ -468,8 +473,10 @@ namespace Type17_ClipToStiffener
             }
             if (IsDefaultValue(_PlatePosition))
                 _PlatePosition = 0;
-            if (IsDefaultValue(_Clerance))
-                _Clerance = 10;
+            if (IsDefaultValue(_CleranceTop))
+                _CleranceTop = 10;
+            if (IsDefaultValue(_CleranceBottom))
+                _CleranceBottom = 10;
 
         }
         
@@ -669,8 +676,9 @@ namespace Type17_ClipToStiffener
                 List<Line> lines = new List<Line>(); 
                 foreach (int i in new List<int> { 1, -1 })
                 {
+                    double clerance = (i == -1)? _CleranceTop : _CleranceBottom;
                     countourPoints.Clear();
-                    Point holdpoint = gp.Origin + (_Clerance + (flangeDistance / 2) ) * gp.GetNormal() * i;
+                    Point holdpoint = gp.Origin + (clerance + (flangeDistance / 2) ) * gp.GetNormal() * i;
                     GeometricPlane geometricPlane = new GeometricPlane(holdpoint, gp.GetNormal());
                     foreach (Point po in new List<Point> { po1, po2, po3, po4 })
                     {
@@ -695,7 +703,7 @@ namespace Type17_ClipToStiffener
                     cp.Position.Depth = Position.DepthEnum.MIDDLE;
                     cp.Insert();
 
-                    holdpoint = gp.Origin + (_Clerance + (flangeDistance / 2) - (_Thickness/2) )* gp.GetNormal() * i;
+                    holdpoint = gp.Origin + (clerance + (flangeDistance / 2) - (_Thickness/2) )* gp.GetNormal() * i;
                     geometricPlane = new GeometricPlane(holdpoint, gp.GetNormal());
                     lines.Add(Projection.LineToPlane(new Line(po1, po4), geometricPlane));
                     lines.Add(Projection.LineToPlane(new Line(po2, po3), geometricPlane));

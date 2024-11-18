@@ -33,6 +33,7 @@ namespace Type17_ClipToStiffener
             this.OkApplyModifyGetOnOffCancel = new Tekla.Structures.Dialog.UIControls.OkApplyModifyGetOnOffCancel();
             this.tabControl = new System.Windows.Forms.TabControl();
             this.ParametersTabPage = new System.Windows.Forms.TabPage();
+            this.label3 = new System.Windows.Forms.Label();
             this.label11 = new System.Windows.Forms.Label();
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.textBox9 = new System.Windows.Forms.TextBox();
@@ -91,19 +92,20 @@ namespace Type17_ClipToStiffener
             this.comboBox6 = new System.Windows.Forms.ComboBox();
             this.comboBox5 = new System.Windows.Forms.ComboBox();
             this.saveLoad = new Tekla.Structures.Dialog.UIControls.SaveLoad();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.textBox10 = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.tableLayoutPanel.SuspendLayout();
             this.tabControl.SuspendLayout();
             this.ParametersTabPage.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
             this.SuspendLayout();
@@ -168,6 +170,8 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetAttributeTypeName(this.ParametersTabPage, null);
             this.ParametersTabPage.BackColor = System.Drawing.Color.WhiteSmoke;
             this.structuresExtender.SetBindPropertyName(this.ParametersTabPage, null);
+            this.ParametersTabPage.Controls.Add(this.label4);
+            this.ParametersTabPage.Controls.Add(this.textBox10);
             this.ParametersTabPage.Controls.Add(this.label3);
             this.ParametersTabPage.Controls.Add(this.label11);
             this.ParametersTabPage.Controls.Add(this.textBox6);
@@ -196,27 +200,41 @@ namespace Type17_ClipToStiffener
             this.ParametersTabPage.Text = "Clip to Stiffner";
             this.ParametersTabPage.Click += new System.EventHandler(this.ParametersTabPage_Click);
             // 
+            // label3
+            // 
+            this.structuresExtender.SetAttributeName(this.label3, null);
+            this.structuresExtender.SetAttributeTypeName(this.label3, null);
+            this.label3.AutoSize = true;
+            this.structuresExtender.SetBindPropertyName(this.label3, null);
+            this.label3.Location = new System.Drawing.Point(489, 274);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(143, 16);
+            this.label3.TabIndex = 23;
+            this.label3.Text = "For column Connection";
+            // 
             // label11
             // 
             this.structuresExtender.SetAttributeName(this.label11, null);
             this.structuresExtender.SetAttributeTypeName(this.label11, null);
             this.label11.AutoSize = true;
             this.structuresExtender.SetBindPropertyName(this.label11, null);
-            this.label11.Location = new System.Drawing.Point(640, 376);
+            this.label11.Location = new System.Drawing.Point(640, 310);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(69, 16);
+            this.label11.Size = new System.Drawing.Size(111, 16);
             this.label11.TabIndex = 21;
-            this.label11.Text = "Clearence";
+            this.label11.Text = "Clearence at Top";
+            this.label11.Click += new System.EventHandler(this.label11_Click);
             // 
             // textBox6
             // 
-            this.structuresExtender.SetAttributeName(this.textBox6, "Clerance");
+            this.structuresExtender.SetAttributeName(this.textBox6, "CleranceTop");
             this.structuresExtender.SetAttributeTypeName(this.textBox6, "Distance");
             this.structuresExtender.SetBindPropertyName(this.textBox6, null);
-            this.textBox6.Location = new System.Drawing.Point(643, 395);
+            this.textBox6.Location = new System.Drawing.Point(643, 329);
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(100, 22);
             this.textBox6.TabIndex = 20;
+            this.textBox6.TextChanged += new System.EventHandler(this.textBox6_TextChanged_1);
             // 
             // textBox9
             // 
@@ -661,6 +679,7 @@ namespace Type17_ClipToStiffener
             this.comboBox3.Name = "comboBox3";
             this.comboBox3.Size = new System.Drawing.Size(121, 24);
             this.comboBox3.TabIndex = 5;
+            this.comboBox3.SelectedIndexChanged += new System.EventHandler(this.comboBox3_SelectedIndexChanged);
             // 
             // comboBox2
             // 
@@ -679,6 +698,7 @@ namespace Type17_ClipToStiffener
             this.comboBox2.Name = "comboBox2";
             this.comboBox2.Size = new System.Drawing.Size(121, 24);
             this.comboBox2.TabIndex = 4;
+            this.comboBox2.SelectedIndexChanged += new System.EventHandler(this.comboBox2_SelectedIndexChanged);
             // 
             // label17
             // 
@@ -914,17 +934,27 @@ namespace Type17_ClipToStiffener
             this.saveLoad.TabIndex = 0;
             this.saveLoad.UserDefinedHelpFilePath = null;
             // 
-            // pictureBox2
+            // label4
             // 
-            this.structuresExtender.SetAttributeName(this.pictureBox2, null);
-            this.structuresExtender.SetAttributeTypeName(this.pictureBox2, null);
-            this.pictureBox2.BackgroundImage = global::Type17_ClipToStiffener.Properties.Resources.Screenshot_2024_11_14_180223;
-            this.structuresExtender.SetBindPropertyName(this.pictureBox2, null);
-            this.pictureBox2.Location = new System.Drawing.Point(499, 308);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(220, 184);
-            this.pictureBox2.TabIndex = 22;
-            this.pictureBox2.TabStop = false;
+            this.structuresExtender.SetAttributeName(this.label4, null);
+            this.structuresExtender.SetAttributeTypeName(this.label4, null);
+            this.label4.AutoSize = true;
+            this.structuresExtender.SetBindPropertyName(this.label4, null);
+            this.label4.Location = new System.Drawing.Point(621, 452);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(128, 16);
+            this.label4.TabIndex = 25;
+            this.label4.Text = "Clearence at Bottom";
+            // 
+            // textBox10
+            // 
+            this.structuresExtender.SetAttributeName(this.textBox10, "CleranceBottom");
+            this.structuresExtender.SetAttributeTypeName(this.textBox10, "Distance");
+            this.structuresExtender.SetBindPropertyName(this.textBox10, null);
+            this.textBox10.Location = new System.Drawing.Point(624, 471);
+            this.textBox10.Name = "textBox10";
+            this.textBox10.Size = new System.Drawing.Size(100, 22);
+            this.textBox10.TabIndex = 24;
             // 
             // pictureBox1
             // 
@@ -937,6 +967,18 @@ namespace Type17_ClipToStiffener
             this.pictureBox1.Size = new System.Drawing.Size(391, 311);
             this.pictureBox1.TabIndex = 2;
             this.pictureBox1.TabStop = false;
+            // 
+            // pictureBox2
+            // 
+            this.structuresExtender.SetAttributeName(this.pictureBox2, null);
+            this.structuresExtender.SetAttributeTypeName(this.pictureBox2, null);
+            this.pictureBox2.BackgroundImage = global::Type17_ClipToStiffener.Properties.Resources.Screenshot_2024_11_14_1802231;
+            this.structuresExtender.SetBindPropertyName(this.pictureBox2, null);
+            this.pictureBox2.Location = new System.Drawing.Point(480, 306);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(220, 184);
+            this.pictureBox2.TabIndex = 22;
+            this.pictureBox2.TabStop = false;
             // 
             // pictureBox3
             // 
@@ -961,18 +1003,6 @@ namespace Type17_ClipToStiffener
             this.pictureBox4.Size = new System.Drawing.Size(210, 188);
             this.pictureBox4.TabIndex = 57;
             this.pictureBox4.TabStop = false;
-            // 
-            // label3
-            // 
-            this.structuresExtender.SetAttributeName(this.label3, null);
-            this.structuresExtender.SetAttributeTypeName(this.label3, null);
-            this.label3.AutoSize = true;
-            this.structuresExtender.SetBindPropertyName(this.label3, null);
-            this.label3.Location = new System.Drawing.Point(508, 276);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(143, 16);
-            this.label3.TabIndex = 23;
-            this.label3.Text = "For column Connection";
             // 
             // MainForm
             // 
@@ -1000,8 +1030,8 @@ namespace Type17_ClipToStiffener
             this.panel2.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
             this.ResumeLayout(false);
@@ -1077,5 +1107,7 @@ namespace Type17_ClipToStiffener
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TextBox textBox10;
     }
 }
