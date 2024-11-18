@@ -976,7 +976,7 @@ namespace Type17_ClipToStiffener
             this.structuresExtender.SetBindPropertyName(this.pictureBox2, null);
             this.pictureBox2.Location = new System.Drawing.Point(480, 306);
             this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(220, 184);
+            this.pictureBox2.Size = new System.Drawing.Size(215, 184);
             this.pictureBox2.TabIndex = 22;
             this.pictureBox2.TabStop = false;
             // 

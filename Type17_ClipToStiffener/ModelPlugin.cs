@@ -374,7 +374,7 @@ namespace Type17_ClipToStiffener
             }
             if (IsDefaultValue(_PlateHight))
             {
-                _PlateHight = 200;
+                _PlateHight = double.MinValue;
             }
             if (IsDefaultValue(_PlateWidth1))
             {
@@ -733,7 +733,7 @@ namespace Type17_ClipToStiffener
             }
             return cp1;
         }
-        private ArrayList polibeamPlate(Beam beam1, Beam beam2, ContourPlate cp,double gap ,double webGap, double width2, double hight, double thickness, double topOffset, string material,bool position , out ArrayList list )
+        private ArrayList polibeamPlate(Beam beam1, Beam beam2, ContourPlate cp,double gap ,double webGap, double width2, double hight1, double thickness, double topOffset, string material,bool position , out ArrayList list )
         {
             Faces Faces = new Faces();
             TeklaPH.Line _Line = new TeklaPH.Line();
@@ -863,14 +863,15 @@ namespace Type17_ClipToStiffener
                 Vector vector0 = (beam1.Name != "COLUMN") ? beam1_faces[5].Vector : beam1_faces[13].Vector,
                     vector1;
                 Point po = new Point();
+                ArrayList arrayList = cp.Contour.ContourPoints;
                 if (vector0.Y > 0)
                    {
                     if (beam1.Name != "COLUMN")
                         po = Projection.PointToPlane(center1, Faces.ConvertFaceToGeometricPlane(beam1_faces[5].Face));
                     else
                     {
-                        ArrayList arrayList = cp.Contour.ContourPoints;
-                        po = MidPoint(arrayList[2] as Point, arrayList[3] as Point);
+                        
+                        po = arrayList[2] as Point;
                     }
                     vector1 = (beam1.Name != "COLUMN") ? beam1_faces[5].Vector : beam1_faces[13].Vector;
                 }
@@ -880,14 +881,18 @@ namespace Type17_ClipToStiffener
                         po = Projection.PointToPlane(center1, Faces.ConvertFaceToGeometricPlane(beam1_faces[11].Face)); 
                     else
                        {
-                        ArrayList arrayList = cp.Contour.ContourPoints;
-                        po = MidPoint(arrayList[2] as Point, arrayList[3] as Point);
+                      
+                        po = arrayList[2] as Point;
+                        
                     }
-                   vector1 = (beam1.Name != "COLUMN") ? beam1_faces[11].Vector : beam1_faces[12].Vector;
+                   vector1 = (beam1.Name != "COLUMN") ? beam1_faces[11].Vector : beam1_faces[13].Vector;
                 }
-                
-                GeometricPlane g1 =   new GeometricPlane(po-vector1*(_TopOffset +(hight/2)),vector1) ,
-                    g2 = new GeometricPlane(po, beam1_faces[13].Vector);
+               
+                double num1 = SurfaceFinder.getFlangeDistance(beam2), num2 = (num1 > 200) ? 60 : 40;
+                double hight = (hight1 == double.MinValue) ? num1 - num2 : hight1;
+                GeometricPlane g1 = new GeometricPlane(po - vector1 * (topOffset + (hight / 2)), vector1),
+                    g2 = new GeometricPlane(po + vector1 * (topOffset + (hight / 2) - thickness), beam1_faces[13].Vector),
+                    g3 = new GeometricPlane(MidPoint(arrayList[2] as Point, arrayList[3] as Point), beam1_faces[13].Vector);
                 ArrayList countourPoints = new ArrayList();
 
                 bool debthFlag = DebthChecker(beam1, beam2, center1, center2);
@@ -897,8 +902,12 @@ namespace Type17_ClipToStiffener
                 foreach (Point p in new List<Point> {poliPointA1 , center1 ,poliPointB1 })
                 {
                     Point hold = p;
-                    if(_TopOffset != -1 || beam1.Name == "COLUMN")
-                        hold = Projection.PointToPlane(p,(beam1.Name != "COLUMN") ? g1:g2 );
+                    if(_TopOffset != -1 && beam1.Name == "COLUMN")
+                        hold = Projection.PointToPlane(p,g2 );
+                    else if (_TopOffset != -1 && beam1.Name != "COLUMN")
+                        hold = Projection.PointToPlane(p, g1);
+                    else if (_TopOffset == -1 && beam1.Name == "COLUMN")
+                        hold = Projection.PointToPlane(p, g3);
                     list1.Add(hold);
                     ContourPoint contourPoint = new ContourPoint(hold, new Chamfer());
                     countourPoints.Add(contourPoint);
@@ -918,8 +927,12 @@ namespace Type17_ClipToStiffener
                 foreach (Point p in new List<Point> { poliPointA2, center2, poliPointB2 })
                 {
                     Point hold = p;
-                    if (_TopOffset != -1 || beam1.Name == "COLUMN")
-                        hold = Projection.PointToPlane(p, (beam1.Name != "COLUMN") ? g1 : g2);
+                    if (_TopOffset != -1 && beam1.Name == "COLUMN")
+                        hold = Projection.PointToPlane(p, g2);
+                    else if (_TopOffset != -1 && beam1.Name != "COLUMN")
+                        hold = Projection.PointToPlane(p, g1);
+                    else if (_TopOffset == -1 && beam1.Name == "COLUMN")
+                        hold = Projection.PointToPlane(p, g3);
                     ContourPoint contourPoint = new ContourPoint(hold, new Chamfer());
                     countourPoints.Add(contourPoint);
                 }

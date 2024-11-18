@@ -643,6 +643,14 @@ namespace TeklaPH
             List<Face_> cp_faces = face_s.OrderByDescending(fa =>Distance.PointToPoint(mid,Projection.PointToPlane(mid,ConvertFaceToGeometricPlane(fa.Face)))).ToList() ;
             return new List<GeometricPlane> { ConvertFaceToGeometricPlane(cp_faces[0].Face), ConvertFaceToGeometricPlane(cp_faces[1].Face) };
         }
+        public static double getFlangeDistance( Part part1)
+        {
+            List<GeometricPlane> geometricPlanes = GetFlangeOutterSurfacePlane(part1);
+            Point point = new Point(0, 0, 0),
+                p1 = Projection.PointToPlane(point, geometricPlanes[0]),
+                p2 = Projection.PointToPlane(point, geometricPlanes[1]);
+            return Distance.PointToPoint(p1, p2);
+        }
         public static double WebThickness(Part part)
         {
             double webThickness = 0;
